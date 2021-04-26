@@ -1,0 +1,16 @@
+This Google Doodle has a cool magnifying glass effect:
+https://www.google.com/logos/2011/worldsfair.html
+
+Your task is to implement a similar effect! When the user's mouse moves over the logo, show the magnifying glass with the "magnified" portion of the logo inside. (Don't worry about adding fancy enter/leave transitions and animations.)
+
+In the Codepen Assets window you'll find three images:
+- Transparent magnifying glass
+https://s3-us-west-2.amazonaws.com/s.cdpn.io/1528666/glass.png
+
+- Logo
+https://s3-us-west-2.amazonaws.com/s.cdpn.io/1528666/worldsfair-small.jpg
+
+- Logo@2x
+https://s3-us-west-2.amazonaws.com/s.cdpn.io/1528666/worldsfair-large.jpg
+
+Good luck!
