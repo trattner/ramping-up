@@ -55,26 +55,29 @@ function getCursorXY(e) {
 function getInfo(){
   var info = document.getElementById("eulerVal").getBoundingClientRect()
   console.log("X Position: " + info.right + "\nY Position: " + info.top + "\nHeight: " + info.height + "\nWidth: " + info.width);
-  var a = [];
-  var images = ["https://andytrattner.com/img/headshot.png","US.png"];
+  var counter = 1;
+  var images = ["US.png","US.png","https://andytrattner.com/img/headshot.png","US.png"];
   for (var s of images){
     var x = document.createElement("IMG");
     x.src=s;
-    a.push(x);
-  }
-  timedInject(a);
-}
-
-function timedInject(a){
-  var counter = 1;
-  console.log(a);
-  for (var e of a){
-    setTimeout(() => {
-            document.body.appendChild(e);
-    },1000*counter);
+    x.style.width = '200px';
+    x.style.padding = '10px';
+    x.style.display = 'inline-block';
+    x.id=counter.toString();
+    doSetTimeout(x,counter);
     counter++;
   }
 }
+
+
+function doSetTimeout(elem,counter) {
+  setTimeout(function() { document.body.appendChild(elem); }, counter * 1000);
+}
+
+
+
+
+
 
 /*
 
