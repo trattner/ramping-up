@@ -1,0 +1,32 @@
+body {
+  background-color: white;
+  text-align: center;
+  color: white;
+}
+
+#googleImg{
+  position: absolute;
+  left: 100px;
+  top: 100px;
+  width: auto;
+  height: 100px;
+}
+
+#mouseImg{
+  position:absolute;
+  opacity: 1;
+  z-index: 3;
+}
+
+#bigImg{
+  background-image: url('C:\\Users\\0u8808\\Desktop\\Private\\Code\\ramping-up\\challenge\\img\\worldsfair-large.jpeg');
+  opacity: 1;
+  width: 400px;
+  height: 400px;
+  position: absolute;
+  overflow: hidden;
+  border-radius: 50%;
+  margin-left: -25%;
+  z-index: 2;
+  background-repeat: no-repeat;
+}

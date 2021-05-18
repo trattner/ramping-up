@@ -1,0 +1,40 @@
+body {
+  background-color: black;
+  text-align: center;
+  color: white;
+}
+
+.boardContainer{
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-gap: 50px;
+}
+
+.boardQuad{
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-gap: 50px;
+  position: relative;
+  border: 1px solid rgba(255,255,255,.8);
+  width: 500px;
+  height:500px;
+  background-color: #FAEBD7;
+  z-index: 2;
+  align-items: center;
+  justify-items: center;
+}
+/*
+.boardQuad:after{
+  content: "";
+  display:block;
+  padding-bottom: 100%;
+}
+*/
+.openSpot{
+  width: 50%;
+  height:50%;
+  background-color: #FFFFFF;
+  z-index: 3;
+  border-radius: 50%;
+
+}
