@@ -1,14 +1,60 @@
 
+var moveCounter = 1;
 
+function makeMove(clickedEle){
+  if(clickedEle.charAt(0) == 'N'){
+    if(moveCounter == 1){
+      changeColor(clickedEle);
+    }
+    if(moveCounter == 2){
+      /*For rotating quad on white turn*/
+      rotateQuad();
+      checkWin();
+    }
+    if(moveCounter == 3){
+      changeColor(clickedEle);
+    }
+    if(moveCounter == 4){
+      /*For rotating quad on black turn*/
+      rotateQuad();
+      checkWin();
+    }
+    moveCounter = moveCounter + 1;
+    if(moveCounter == 5){
+      moveCounter = 1;
+    }
+  }
+  else{
+    console.log("Illegal Move");
+  }
+  return;
+}
 
+function changeColor(eleId){
+  var newColor;
+  var newColorId;
+  if(moveCounter == 1){
+    newColorId = "W";
+    newColor = '#FFFFFF';
+  }
+  if(moveCounter == 3){
+    newColorId = "B";
+    newColor = '#000000';
+  }
+  var newId = newColorId + eleId.charAt(1) + eleId.charAt(2);
+  document.getElementById(eleId).id = newId;
+  document.getElementById(newId).style.backgroundColor = newColor;
+  return;
+}
 
+function rotateQuad(){
+  console.log("Rotate");
+  return;
+}
 
-
-
-
-
-
-
+function checkWin(){
+  console.log("Did someone win");
+}
 
 /* CORE INTERFACE SPEC - communication protocol between front and back-end
 
@@ -75,5 +121,5 @@
   - retrieve game state history from database (replay games, etc)
   - add ideas as minus bullets, other person change to plus if in agreement?
   - illegal attempted move event from opponenet, alert user and display message secretly insulting the opponent
-  - 
+  -
 */
