@@ -32,12 +32,13 @@ function dumpJunkToFB(s){
   // take input string s and write to firebase junk collection as initial test
   if (s == 'hi') {
     helloWorld().then((result) => {
-      var sanitizedMessage = result.data.text;
+      console.log(result);
+      var sanitizedMessage = result;
       console.log('success hi sent');
       output_msg = sanitizedMessage;
     });
   } else {
-    addMessage({ text_input: s, counter:junk_counter })
+    addMessage({ text: s, counter:junk_counter })
       .then((result) => {
         // Read result of the Cloud Function.
         var sanitizedMessage = result.data.text;
