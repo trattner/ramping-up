@@ -53,9 +53,87 @@ function rotateQuad(){
 }
 
 function checkWin(){
-  console.log("Did someone win");
+  checkAcross();
+  checkDown();
+  checkDiag();
 }
 
+function checkAcross(){
+  if(moveCounter == 2){
+    var winColor = 'W';
+  }
+  else{
+    var winColor = 'B';
+  }
+  for(var j = 2; j < 4; j++){
+    for(var i = 1; i < 10; i++){
+      if(i == 1 || i == 4 || i == 7){
+        var check1 = i;
+        var check2 = i + 1;
+        var check3 = i + 2;
+        var check4 = check1;
+        var check5 = check2;
+        var q1 = j;
+        var q2 = q1;
+        var q3 = q1;
+        if(j == 2){
+          var q4 = 1;
+          var q5 = 1;
+        }
+        if(j == 3){
+          var q4 = 4;
+          var q5 = 4;
+        }
+      }
+      if(i == 2 || i == 5 || i == 8){
+        var check1 = i;
+        var check2 = i + 1;
+        var check3 = i - 1;
+        var check4 = check1;
+        var check5 = check2;
+        var q1 = j;
+        var q2 = q1;
+        if(j == 2){
+          var q3 = 1;
+          var q4 = 1;
+          var q5 = 1;
+        }
+        if(j == 3){
+          var q3 = 4;
+          var q4 = 4;
+          var q5 = 4;
+        }
+      }
+      var flag = 0;
+      if(document.body.contains(document.getElementById(winColor + q1 + check1))){
+        flag = flag + 1;
+      }
+      if(document.body.contains(document.getElementById(winColor + q2 + check2))){
+        flag = flag + 1;
+      }
+      if(document.body.contains(document.getElementById(winColor + q3 + check3))){
+        flag = flag + 1;
+      }
+      if(document.body.contains(document.getElementById(winColor + q4 + check4))){
+        flag = flag + 1;
+      }
+      if(document.body.contains(document.getElementById(winColor + q5 + check5))){
+        flag = flag + 1;
+      }
+      if(flag == 5){
+        console.log(winColor + " wins!");
+      }
+    }
+  }
+}
+
+function checkDown(){
+  console.log("Check down");
+}
+
+function checkDiag(){
+  console.log("Check Diagonal");
+}
 /* CORE INTERFACE SPEC - communication protocol between front and back-end
 
   1. MoveSubmit(s) ==> [output_boolean, output_string_2]
