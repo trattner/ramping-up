@@ -58,6 +58,79 @@ exports.addMessage3 = functions.https.onRequest( (req, res) => {
   }
 });
 
+exports.readJunk = functions.https.onCall((data, context) => {
+  const counter = data.counter;
+  const dbRef = admin.database().ref();
+  dbRef.child("messages").child(counter).get().then((snapshot) => {
+    if (snapshot.exists()) {
+      console.log(snapshot.val());
+      var key = Object.keys(snapshot.val())[0];
+      var output = snapshot.val()[key].text.toString();
+      console.log(output);
+      return output;
+    } else {
+      console.log("No data available");
+      return "No data available";
+    }
+  }).catch((error) => {
+    console.error(error);
+    return error;
+  });
+});
+
+
+exports.addJunk = functions.https.onCall((data, context) => {
+  const text = data.text;
+  const counter = data.counter;
+  functions.logger.info(text);
+  // Authentication / user information is automatically added to the request.
+  //const uid = context.auth.uid || null;
+  //const name = context.auth.token.name || null;
+  //const picture = context.auth.token.picture || null;
+  //const email = context.auth.token.email || null;
+
+  return admin.database().ref('/messages/' + counter).push({
+    text: text,
+    counter: counter
+    //author: { uid, name, picture, email },
+  }).then(() => {
+    console.log('New Message written');
+    // Returning the sanitized message to the client.
+    return { text: text };
+  }).catch((error) => {
+    // Re-throwing the error as an HttpsError so that the client gets the error details.
+      throw new functions.https.HttpsError('unknown', error.message, error);
+    });
+
+
+/*
+  res.set('Access-Control-Allow-Origin', '*');
+  res.set('Access-Control-Allow-Methods', 'GET, PUT, POST, OPTIONS');
+  res.set('Access-Control-Allow-Headers', '*');
+
+  if (req.method === 'OPTIONS') {
+    res.end();
+  } else {
+    try {
+      // Grab the text parameter.
+      const original = req.query.text;
+      functions.logger.info(original);
+      // Push the new message into Database.
+      const result = await admin.database().ref('junk/').set({
+        text: original
+      }, (error) => {
+        if (error) {
+          res.json({result: `Junk FAILED: "${original}" `});
+        } else {
+          res.json({result: `Junk SUCCESS: "${original}" `});
+        }
+      });
+    } catch(err){
+      functions.logger.info(err.message);
+      res.json({result:`ERROR - ${err.message}`});
+    }
+  }*/
+});
 
 
 // Take the text parameter passed to this HTTP endpoint and insert it into
