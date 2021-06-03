@@ -3,23 +3,14 @@ var moveCounter = 1;
 
 function makeMove(clickedEle){
   if(clickedEle.charAt(0) == 'N'){
-    if(moveCounter == 1){
+    if(moveCounter == 1 || moveCounter == 3){
       changeColor(clickedEle);
+      moveCounter = moveCounter + 1;
     }
-    if(moveCounter == 2){
-      /*For rotating quad on white turn*/
-      rotateQuad();
+    if(moveCounter == 2 || moveCounter == 4){
+      console.log("Rotate a Quad");
       checkWin();
     }
-    if(moveCounter == 3){
-      changeColor(clickedEle);
-    }
-    if(moveCounter == 4){
-      /*For rotating quad on black turn*/
-      rotateQuad();
-      checkWin();
-    }
-    moveCounter = moveCounter + 1;
     if(moveCounter == 5){
       moveCounter = 1;
     }
@@ -27,6 +18,7 @@ function makeMove(clickedEle){
   else{
     console.log("Illegal Move");
   }
+  console.log(moveCounter);
   return;
 }
 
@@ -53,9 +45,352 @@ function rotateQuad(){
 }
 
 function checkWin(){
-  console.log("Did someone win");
+  checkAcross();
+  checkDown();
+  checkDiag();
 }
 
+function checkAcross(){
+  if(moveCounter == 2){
+    var winColor = 'W';
+  }
+  else{
+    var winColor = 'B';
+  }
+  for(var j = 2; j < 4; j++){
+    for(var i = 1; i < 10; i++){
+      if(i == 1 || i == 4 || i == 7){
+        var check1 = i;
+        var check2 = i + 1;
+        var check3 = i + 2;
+        var check4 = check1;
+        var check5 = check2;
+        var q1 = j;
+        var q2 = q1;
+        var q3 = q1;
+        if(j == 2){
+          var q4 = 1;
+          var q5 = 1;
+        }
+        if(j == 3){
+          var q4 = 4;
+          var q5 = 4;
+        }
+      }
+      if(i == 2 || i == 5 || i == 8){
+        var check1 = i;
+        var check2 = i + 1;
+        var check3 = i - 1;
+        var check4 = check1;
+        var check5 = check2;
+        var q1 = j;
+        var q2 = q1;
+        if(j == 2){
+          var q3 = 1;
+          var q4 = 1;
+          var q5 = 1;
+        }
+        if(j == 3){
+          var q3 = 4;
+          var q4 = 4;
+          var q5 = 4;
+        }
+      }
+      var flag = 0;
+      if(document.body.contains(document.getElementById(winColor + q1 + check1))){
+        flag = flag + 1;
+      }
+      if(document.body.contains(document.getElementById(winColor + q2 + check2))){
+        flag = flag + 1;
+      }
+      if(document.body.contains(document.getElementById(winColor + q3 + check3))){
+        flag = flag + 1;
+      }
+      if(document.body.contains(document.getElementById(winColor + q4 + check4))){
+        flag = flag + 1;
+      }
+      if(document.body.contains(document.getElementById(winColor + q5 + check5))){
+        flag = flag + 1;
+      }
+      if(flag == 5){
+        console.log(winColor + " wins!");
+      }
+    }
+  }
+}
+
+function checkDown(){
+  if(moveCounter == 2){
+    var winColor = 'W';
+  }
+  else{
+    var winColor = 'B';
+  }
+  for(var j = 1; j < 3; j++){
+    for(var i = 1; i < 10; i++){
+      if(i == 1 || i == 2 || i == 3){
+        var check1 = i;
+        var check2 = i + 3;
+        var check3 = i + 6;
+        var check4 = check1;
+        var check5 = check2;
+        var q1 = j;
+        var q2 = q1;
+        var q3 = q1;
+        if(j == 2){
+          var q4 = 3;
+          var q5 = 3;
+        }
+        if(j == 1){
+          var q4 = 4;
+          var q5 = 4;
+        }
+      }
+      if(i == 4 || i == 5 || i == 6){
+        var check1 = i;
+        var check2 = i + 3;
+        var check3 = i - 3;
+        var check4 = check1;
+        var check5 = check2;
+        var q1 = j;
+        var q2 = q1;
+        if(j == 2){
+          var q3 = 3;
+          var q4 = 3;
+          var q5 = 3;
+        }
+        if(j == 1){
+          var q3 = 4;
+          var q4 = 4;
+          var q5 = 4;
+        }
+      }
+      var flag = 0;
+      if(document.body.contains(document.getElementById(winColor + q1 + check1))){
+        flag = flag + 1;
+      }
+      if(document.body.contains(document.getElementById(winColor + q2 + check2))){
+        flag = flag + 1;
+      }
+      if(document.body.contains(document.getElementById(winColor + q3 + check3))){
+        flag = flag + 1;
+      }
+      if(document.body.contains(document.getElementById(winColor + q4 + check4))){
+        flag = flag + 1;
+      }
+      if(document.body.contains(document.getElementById(winColor + q5 + check5))){
+        flag = flag + 1;
+      }
+      if(flag == 5){
+        console.log(winColor + " wins!");
+      }
+    }
+  }
+}
+
+function checkDiag(){
+  if(moveCounter == 2){
+    var winColor = 'W';
+  }
+  else{
+    var winColor = 'B';
+  }
+  for(var j = 1; j < 3; j++){
+    for(var i = 1; i < 10; i++){
+      if(j == 2){
+        var check1 = i;
+        var check2 = i + 4;
+        var check4 = check1;
+        var check5 = check2;
+        var q1 = j;
+        var q2 = q1;
+        var q4 = 4;
+        var q5 = 4;
+        if(i == 2){
+          var check3 = 7;
+          var q3 = 1;
+        }
+        if(i == 1){
+          var check3 = check1 + 8;
+          var q3 = 2;
+        }
+        if(i == 5){
+          var check3 = check1 - 4;
+          var q3 = 4;
+        }
+        if(i == 4){
+          var check3 = 3;
+          var q3 = 3;
+        }
+      }
+      if(j == 1){
+        var check1 = i;
+        var check2 = i + 2;
+        var check4 = check1;
+        var check5 = check2;
+        var q1 = j;
+        var q2 = q1;
+        var q4 = 3;
+        var q5 = 3;
+        if(i == 2){
+          var check3 = 9;
+          var q3 = 2;
+        }
+        if(i == 3){
+          var check3 = check1 + 4;
+          var q3 = 1;
+        }
+        if(i == 5){
+          var check3 = check1 - 2;
+          var q3 = 3;
+        }
+        if(i == 6){
+          var check3 = 1;
+          var q3 = 4;
+        }
+      }
+      var flag = 0;
+      if(document.body.contains(document.getElementById(winColor + q1 + check1))){
+        flag = flag + 1;
+      }
+      if(document.body.contains(document.getElementById(winColor + q2 + check2))){
+        flag = flag + 1;
+      }
+      if(document.body.contains(document.getElementById(winColor + q3 + check3))){
+        flag = flag + 1;
+      }
+      if(document.body.contains(document.getElementById(winColor + q4 + check4))){
+        flag = flag + 1;
+      }
+      if(document.body.contains(document.getElementById(winColor + q5 + check5))){
+        flag = flag + 1;
+      }
+      if(flag == 5){
+        console.log(winColor + " wins!");
+      }
+    }
+  }
+}
+
+function q1RotateC(){
+  console.log("rotate 1 C");
+  if(moveCounter == 1 || moveCounter == 3){
+    console.log("Place a piece");
+  }
+  if(moveCounter == 2 || moveCounter == 4){
+    /*code for rotate*/
+    checkWin();
+    moveCounter = moveCounter + 1;
+  }
+  if(moveCounter == 5){
+    moveCounter = 1;
+  }
+}
+
+function q1RotateCC(){
+  console.log("rotate 1 CC");
+  if(moveCounter == 1 || moveCounter == 3){
+    console.log("Place a piece");
+  }
+  if(moveCounter == 2 || moveCounter == 4){
+    /*code for rotate*/
+    checkWin();
+    moveCounter = moveCounter + 1;
+  }
+  if(moveCounter == 5){
+    moveCounter = 1;
+  }
+}
+
+function q2RotateC(){
+  console.log("rotate 2 C");
+  if(moveCounter == 1 || moveCounter == 3){
+    console.log("Place a piece");
+  }
+  if(moveCounter == 2 || moveCounter == 4){
+    /*code for rotate*/
+    checkWin();
+    moveCounter = moveCounter + 1;
+  }
+  if(moveCounter == 5){
+    moveCounter = 1;
+  }
+}
+
+function q2RotateCC(){
+  console.log("rotate 2 CC");
+  if(moveCounter == 1 || moveCounter == 3){
+    console.log("Place a piece");
+  }
+  if(moveCounter == 2 || moveCounter == 4){
+    /*code for rotate*/
+    checkWin();
+    moveCounter = moveCounter + 1;
+  }
+  if(moveCounter == 5){
+    moveCounter = 1;
+  }
+}
+
+function q3RotateC(){
+  console.log("rotate 3 C");
+  if(moveCounter == 1 || moveCounter == 3){
+    console.log("Place a piece");
+  }
+  if(moveCounter == 2 || moveCounter == 4){
+    /*code for rotate*/
+    checkWin();
+    moveCounter = moveCounter + 1;
+  }
+  if(moveCounter == 5){
+    moveCounter = 1;
+  }
+}
+
+function q3RotateCC(){
+  console.log("rotate 3 CC");
+  if(moveCounter == 1 || moveCounter == 3){
+    console.log("Place a piece");
+  }
+  if(moveCounter == 2 || moveCounter == 4){
+    /*code for rotate*/
+    checkWin();
+    moveCounter = moveCounter + 1;
+  }
+  if(moveCounter == 5){
+    moveCounter = 1;
+  }
+}
+
+function q4RotateC(){
+  console.log("rotate 4 C");
+  if(moveCounter == 1 || moveCounter == 3){
+    console.log("Place a piece");
+  }
+  if(moveCounter == 2 || moveCounter == 4){
+    /*code for rotate*/
+    checkWin();
+    moveCounter = moveCounter + 1;
+  }
+  if(moveCounter == 5){
+    moveCounter = 1;
+  }
+}
+
+function q4RotateCC(){
+  console.log("rotate 4 CC");
+  if(moveCounter == 1 || moveCounter == 3){
+    console.log("Place a piece");
+  }
+  if(moveCounter == 2 || moveCounter == 4){
+    /*code for rotate*/
+    checkWin();
+    moveCounter = moveCounter + 1;
+  }
+  if(moveCounter == 5){
+    moveCounter = 1;
+  }
+}
 /* CORE INTERFACE SPEC - communication protocol between front and back-end
 
   1. MoveSubmit(s) ==> [output_boolean, output_string_2]

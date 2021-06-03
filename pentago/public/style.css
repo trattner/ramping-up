@@ -36,5 +36,10 @@ body {
   background-color: #D3D3D3;
   z-index: 3;
   border-radius: 50%;
+}
 
+button {
+  background-color: white;
+  color: black;
+  font-size: 36px;
 }
