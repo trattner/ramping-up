@@ -279,6 +279,8 @@ function q1RotateC(){
   }
   if(moveCounter == 2 || moveCounter == 4){
     /*code for rotate*/
+    var quad1Spots = document.getElementsByClassName("openSpot1");
+
     checkWin();
     moveCounter = moveCounter + 1;
   }

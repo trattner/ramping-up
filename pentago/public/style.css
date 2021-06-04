@@ -30,7 +30,28 @@ body {
   padding-bottom: 100%;
 }
 */
-.openSpot{
+.openSpot1{
+  width: 50%;
+  height:50%;
+  background-color: #D3D3D3;
+  z-index: 3;
+  border-radius: 50%;
+}
+.openSpot2{
+  width: 50%;
+  height:50%;
+  background-color: #D3D3D3;
+  z-index: 3;
+  border-radius: 50%;
+}
+.openSpot3{
+  width: 50%;
+  height:50%;
+  background-color: #D3D3D3;
+  z-index: 3;
+  border-radius: 50%;
+}
+.openSpot4{
   width: 50%;
   height:50%;
   background-color: #D3D3D3;
