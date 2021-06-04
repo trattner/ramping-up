@@ -1,5 +1,13 @@
 ////////// GENERAL PURPOSE FUNCTIONS //////////
 
+function JoinGame(name_string){
+
+}
+
+function NewGame(name_string){
+  
+}
+
 function MoveSubmit(move_string){
   // input case-insensitive string of the form 'B13C1' or 'W38'. First letter indicates marble color placed, second character is integer 1-4 indicating quadrant (Cartesian plane convention top-right is I, top-left is II, etc), third character is marble position 1-9 within quadrant (left-to-right, top-to-bottom), fourth optional character indicates rotation direction clockwise (C) or counter-clockwise (R), fifth optional character indicates quadrant rotated (required if fourth character present).
   //Returns: array of two objects, the first being True if move is valid and succeeds in updating game state, False in all other cases (illegal move, error updating, etc.). Second object is a message string describing the outcome, i.e. explaining the reason the move failed. (Can disregard message if True since it should be a copy of the input string.)

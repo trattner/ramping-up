@@ -393,17 +393,81 @@ function q4RotateCC(){
     moveCounter = 1;
   }
 }
+
+
 /* CORE INTERFACE SPEC - communication protocol between front and back-end
 
-  1. MoveSubmit(s) ==> [output_boolean, output_string_2]
+  0. JoinGame(name_string) ==> [success_bool, return_msg, game_state_array]
 
-    Description: Client submits move (clicking the pentago board). Front-end code calls this function at some point. Function verifies if move is legal on the back-end, updates database + internal game state accordingly, and outputs result in array for front-end to display messages to user and/or update the game display.
+    Description: join an existing game by inputting name of game
+
+    Input: case-insensitive string of game name, e.g. "pentamos"
+
+    Output: returns array of three elements, indicating if database successfully retrieved game state
+      - boolean
+      - string
+      - array with 4 elements
+
+      game_state_array[0] = positions_array
+      game_state_array[1] = integer turns taken so far (7)
+      game_state_array[2] = string color to move next ('B')
+      game_state_array[3] = string game result ('W' = white won,'B' = black won,'D' = draw,'P' = game in progress)
+
+      positions_array[0] = quadrant 1 array, 9 elements
+      positions_array[1] = quadrant 2 array, 9 elements
+      positions_array[2] = quadrant 3 array, 9 elements
+      positions_array[3] = quadrant 4 array, 9 elements
+
+      Quadrants on the board:
+
+      | Q2 Q1 |
+      | Q3 Q4 |
+
+
+      Positions in a quadrant:
+
+      | 1 2 3 |
+      | 4 5 6 |
+      | 7 8 9 |
+
+
+      Example Quadrant: ['B','W','O','O','B','W','B','O','O']
+
+      | B W 0 |
+      | 0 B W |
+      | B 0 0 |
+      
+
+  1. NewGame(name_string) ==> [success_bool, return_msg]
+
+    Description: make a new game
+
+    Input: desired name of game
+
+    Output: returns array of two elements, indicating if database succeeded in creating new game or not (e.g. name taken)
+      - boolean
+      - string
+
+
+
+  2. MoveSubmit(s) ==> [output_boolean, output_string_2]
+
+    Description: user submits move
 
     Input: case-insensitive string of the form 'B13C1' or 'W38'. First letter indicates marble color placed, second character is integer 1-4 indicating quadrant (Cartesian plane convention top-right is I, top-left is II, etc), third character is marble position 1-9 within quadrant (left-to-right, top-to-bottom), fourth optional character indicates rotation direction clockwise (C) or counter-clockwise (R), fifth optional character indicates quadrant rotated (required if fourth character present).
 
     Returns: array of two objects, the first being True if move is valid and succeeds in updating game state, False in all other cases (illegal move, error updating, etc.). Second object is a message string describing the outcome, i.e. explaining the reason the move failed. (Can disregard message if True since it should be a copy of the input string.)
 
-  2. Event 'newMove' {              Elaboration of event details
+    Example:
+      var outcome = MoveSubmit('B13C1');
+      if (outcome[0]){
+        // execute code for legal, accepted move
+      } else {
+        console.log(outcome[1]); // message why move failed
+      }
+
+
+  3. Event 'newMove' {              Elaboration of event details
       color: color_str,             'B' or 'W' (color of marble placed)
       quad: quadrant_int,           1-4 (quadrant of marble placement)
       position: pos_int,            1-9 (initially placed hole)
