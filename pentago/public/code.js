@@ -278,9 +278,57 @@ function q1RotateC(){
     console.log("Place a piece");
   }
   if(moveCounter == 2 || moveCounter == 4){
-    /*code for rotate*/
-    var quad1Spots = document.getElementsByClassName("openSpot1");
-
+    var quadName = document.getElementById("Quad1");
+    console.log(document.getElementById("Quad1").className);
+    if(document.getElementById("Quad1").className == "boardQuad0"){
+      console.log("It worked");
+      var quad1Spots = document.getElementsByClassName("openSpot1");
+      quad1Spots[0].id = quad1Spots[0].id[0] + "13";
+      quad1Spots[1].id = quad1Spots[1].id[0] + "16";
+      quad1Spots[2].id = quad1Spots[2].id[0] + "19";
+      quad1Spots[3].id = quad1Spots[3].id[0] + "12";
+      quad1Spots[5].id = quad1Spots[5].id[0] + "18";
+      quad1Spots[6].id = quad1Spots[6].id[0] + "11";
+      quad1Spots[7].id = quad1Spots[7].id[0] + "14";
+      quad1Spots[8].id = quad1Spots[8].id[0] + "17";
+      document.getElementById("Quad1").className = "boardQuad90";
+     }
+    if(document.getElementById("Quad1").className == "boardQuad90"){
+      var quad1Spots = document.getElementsByClassName("openSpot1");
+      quad1Spots[0].id = quad1Spots[0].id[0] + "19";
+      quad1Spots[1].id = quad1Spots[1].id[0] + "18";
+      quad1Spots[2].id = quad1Spots[2].id[0] + "17";
+      quad1Spots[3].id = quad1Spots[3].id[0] + "16";
+      quad1Spots[5].id = quad1Spots[5].id[0] + "14";
+      quad1Spots[6].id = quad1Spots[6].id[0] + "13";
+      quad1Spots[7].id = quad1Spots[7].id[0] + "12";
+      quad1Spots[8].id = quad1Spots[8].id[0] + "11";
+      document.getElementById("Quad1").className = "boardQuad180";
+    }
+    if(document.getElementById("Quad1").className == "boardQuad180"){
+      var quad1Spots = document.getElementsByClassName("openSpot1");
+      quad1Spots[0].id = quad1Spots[0].id[0] + "17";
+      quad1Spots[1].id = quad1Spots[1].id[0] + "14";
+      quad1Spots[2].id = quad1Spots[2].id[0] + "11";
+      quad1Spots[3].id = quad1Spots[3].id[0] + "18";
+      quad1Spots[5].id = quad1Spots[5].id[0] + "12";
+      quad1Spots[6].id = quad1Spots[6].id[0] + "19";
+      quad1Spots[7].id = quad1Spots[7].id[0] + "16";
+      quad1Spots[8].id = quad1Spots[8].id[0] + "13";
+      document.getElementById("Quad1").className = "boardQuad270";
+    }
+    if(document.getElementById("Quad1").className == "boardQuad270"){
+      var quad1Spots = document.getElementsByClassName("openSpot1");
+      quad1Spots[0].id = quad1Spots[0].id[0] + "11";
+      quad1Spots[1].id = quad1Spots[1].id[0] + "12";
+      quad1Spots[2].id = quad1Spots[2].id[0] + "13";
+      quad1Spots[3].id = quad1Spots[3].id[0] + "14";
+      quad1Spots[5].id = quad1Spots[5].id[0] + "16";
+      quad1Spots[6].id = quad1Spots[6].id[0] + "17";
+      quad1Spots[7].id = quad1Spots[7].id[0] + "18";
+      quad1Spots[8].id = quad1Spots[8].id[0] + "19";
+      document.getElementById("Quad1").className = "boardQuad0";
+    }
     checkWin();
     moveCounter = moveCounter + 1;
   }
@@ -436,7 +484,7 @@ function q4RotateCC(){
       | B W 0 |
       | 0 B W |
       | B 0 0 |
-      
+
 
   1. NewGame(name_string) ==> [success_bool, return_msg]
 

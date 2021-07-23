@@ -10,7 +10,7 @@ body {
   grid-gap: 50px;
 }
 
-.boardQuad{
+/*.boardQuad{
   display: grid;
   grid-template-columns: auto auto auto;
   grid-gap: 50px;
@@ -22,6 +22,62 @@ body {
   z-index: 2;
   align-items: center;
   justify-items: center;
+}*/
+.boardQuad0{
+   transform: rotate(0deg) translateY(0%);
+   display: grid;
+   grid-template-columns: auto auto auto;
+   grid-gap: 50px;
+   position: relative;
+   border: 1px solid rgba(255,255,255,.8);
+   width: 500px;
+   height:500px;
+   background-color: #FAEBD7;
+   z-index: 2;
+   align-items: center;
+   justify-items: center;
+}
+.boardQuad90{
+   transform: rotate(90deg) translateY(0%);
+   display: grid;
+   grid-template-columns: auto auto auto;
+   grid-gap: 50px;
+   position: relative;
+   border: 1px solid rgba(255,255,255,.8);
+   width: 500px;
+   height:500px;
+   background-color: #FAEBD7;
+   z-index: 2;
+   align-items: center;
+   justify-items: center;
+}
+.boardQuad180{
+   transform: rotate(180deg) translateY(0%);
+   display: grid;
+   grid-template-columns: auto auto auto;
+   grid-gap: 50px;
+   position: relative;
+   border: 1px solid rgba(255,255,255,.8);
+   width: 500px;
+   height:500px;
+   background-color: #FAEBD7;
+   z-index: 2;
+   align-items: center;
+   justify-items: center;
+}
+.boardQuad270{
+   transform: rotate(270deg) translateY(0%);
+   display: grid;
+   grid-template-columns: auto auto auto;
+   grid-gap: 50px;
+   position: relative;
+   border: 1px solid rgba(255,255,255,.8);
+   width: 500px;
+   height:500px;
+   background-color: #FAEBD7;
+   z-index: 2;
+   align-items: center;
+   justify-items: center;
 }
 /*
 .boardQuad:after{
