@@ -2,6 +2,69 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp();
 //const cors = require('cors')({origin: true});
+const game_root = '/test-games/';
+
+
+exports.startNewGame = functions.https.onCall((data, context) => {
+  const game_name = data.name;
+  const game_state_string = data.state;
+  functions.logger.info('creating new game: ' + game_name);
+  var output_msg = '';
+
+  return admin.database().ref(game_root + game_name).set({
+    0: game_state_string
+  }).then(() => {
+    functions.logger.info('New game ' + game_name + ' successfully created.');
+    return { msg: 'created new game ' + game_name, bool: true };
+  }).catch((error) => {
+    // Re-throwing the error as an HttpsError so that the client gets the error details.
+    throw new functions.https.HttpsError('unknown', error.message, error);
+  });
+});
+
+
+exports.makeMove = functions.https.onCall((data, context) => {
+  const game_name = data.name;
+  const new_move_string = data.move;
+  functions.logger.info('making new move ' + new_move_string + ' in game ' + game_name);
+  var output_msg = '';
+
+  return admin.database().ref(game_root + game_name).update({
+    1: new_move_string
+  }).then(() => {
+    functions.logger.info('Move ' + new_move_string + ' successfully made.');
+    return { msg: 'made move ' + new_move_string + ' in game ' + game_name, bool: true };
+  }).catch((error) => {
+    // Re-throwing the error as an HttpsError so that the client gets the error details.
+    throw new functions.https.HttpsError('unknown', error.message, error);
+  });
+});
+
+exports.loadExistingGame = functions.https.onCall((data, context) => {
+  const game_name = data.name;
+  const dbRef = admin.database().ref();
+  dbRef.child(game_root).child(game_name).get().then((snapshot) => {
+    if (snapshot.exists()) {
+      functions.logger.info(snapshot.val());
+      var game_state = [];
+      //var key = Object.keys(snapshot.val())[0];
+      //var output = snapshot.val()[key].text.toString();
+      return {
+        exists: true,
+        state: game_state
+      };
+    } else {
+      return {
+        exists: false,
+        state: []
+      };
+    }
+  }).catch((error) => {
+    console.error(error);
+    return error;
+  });
+});
+
 
 /*
 // dummy endpoint
