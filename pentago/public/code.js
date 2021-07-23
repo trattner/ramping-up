@@ -454,12 +454,13 @@ function q4RotateCC(){
     Output: returns array of three elements, indicating if database successfully retrieved game state
       - boolean
       - string
-      - array with 4 elements
+      - array with 5 elements
 
       game_state_array[0] = positions_array
       game_state_array[1] = integer turns taken so far (7)
       game_state_array[2] = string color to move next ('B')
       game_state_array[3] = string game result ('W' = white won,'B' = black won,'D' = draw,'P' = game in progress)
+      game_state_array[4] = string last move command, or empty if new
 
       positions_array[0] = quadrant 1 array, 9 elements
       positions_array[1] = quadrant 2 array, 9 elements
