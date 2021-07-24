@@ -17,7 +17,7 @@ function JoinGame(name_string){
     var game_state = JSON.parse(result.data.state);
     if (exists_bool){
     // set current game state
-
+      
       return [true, 'game found', game_state];
     } else {
     // show false
@@ -73,6 +73,11 @@ function MoveSubmit(move_string){
 
 function getGame(game_id){
   // takes game_id string, returns array [exists_bool, state]
+}
+
+function changeGame(game_name){
+  current_game = game_name;
+  return true;
 }
 
 function isLegalMove(move_string){
@@ -135,6 +140,10 @@ function dumpJunkToFB(s){
     const g_name = s.split(' ')[1];
     var output = JoinGame(g_name);
     output_msg = output[1];
+  } else if (s.split(' ')[0] == 'changegame'){
+    const g_name = s.split(' ')[1];
+    changeGame(g_name);
+    console.log('changed game to: ' + current_game);
   } else {
     addJunk({ text: s, counter: junk_counter}).then(result => {
         // Read result of the Cloud Function.
