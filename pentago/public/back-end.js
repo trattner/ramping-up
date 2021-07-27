@@ -1,8 +1,8 @@
-////////// GENERAL PURPOSE FUNCTIONS //////////
-
 var current_game = '';
+var current_game_state = [];
 
-function JoinGame(name_string){
+async function JoinGame(name_string, live = true){
+  if (live) { return [false, 'dummy test output', []]; }
   // join an existing game by inputting name of game
   var success_bool = false;
   var return_msg = '';
@@ -10,14 +10,14 @@ function JoinGame(name_string){
   const findGame = firebase.functions().httpsCallable('loadExistingGame');
 
   // find if game exists
-  findGame({
+  return await findGame({
     name: name_string,
   }).then(result => {
     var exists_bool = result.data.exists;
     var game_state = JSON.parse(result.data.state);
     if (exists_bool){
-    // set current game state
-      
+      current_game = name_string;
+      current_game_state = game_state;
       return [true, 'game found', game_state];
     } else {
     // show false
@@ -28,9 +28,10 @@ function JoinGame(name_string){
   });
 }
 
-function NewGame(name_string){
+async function NewGame(name_string, live = true){
+  if(live){ return [false, 'dummy test output'];}
+
   // make a new game
-  var success_bool = false;
   var return_msg = '';
   const startNewGame = firebase.functions().httpsCallable('startNewGame');
 
@@ -38,7 +39,8 @@ function NewGame(name_string){
   var new_game_state_array = [[['O','O','O','O','O','O','O','O','O'],['O','O','O','O','O','O','O','O','O'],['O','O','O','O','O','O','O','O','O'],['O','O','O','O','O','O','O','O','O']],0,'W','P',''];
 
   // add game state to database
-  startNewGame({
+
+  return await startNewGame({
     name: name_string,
     state: JSON.stringify(new_game_state_array)
   }).then(result => {
@@ -46,43 +48,57 @@ function NewGame(name_string){
     var success = result.data.bool;
     if (success){
       current_game = name_string;
+      current_game_state = new_game_state_array;
+      return [success, return_msg];
+    } else {
+      return [false,return_msg]
     }
   });
 
-  return [success_bool, return_msg];
 }
 
-function MoveSubmit(move_string){
-// user submits move
+function MoveSubmit(move_string,live = true){
+  if(live){ return [false, 'dummy test output on input ' + move_string]; }
+  // user submits move
   var output_bool = false;
   var return_msg = '';
   const submitMoveToGame = firebase.functions().httpsCallable('makeMove');
+  var legal_array = isLegalMove(move_string);
+  if (legal_array[0]){
+    //update game state
 
-  // add game state to database
-  submitMoveToGame({
-    name: current_game,
-    move: move_string
-  }).then(result => {
-    var return_msg = result.data.msg;
-    output_bool = result.data.bool;
-  });
+    // TODO game operations on array
 
-  return [output_bool, return_msg];
-
+    // add game state to database
+    return submitMoveToGame({
+      name: current_game,
+      move: move_string,
+      state: current_game_state
+    }).then(result => {
+      var return_msg = result.data.msg;
+      output_bool = result.data.bool;
+      return [output_bool, return_msg];
+    });
+  } else {
+    // move not legal
+    return [false, legal_array[1]];
+  }
 }
 
-function getGame(game_id){
-  // takes game_id string, returns array [exists_bool, state]
-}
-
-function changeGame(game_name){
-  current_game = game_name;
-  return true;
-}
 
 function isLegalMove(move_string){
-  // takes input message from front-end,
+  // takes input message from front-end, outputs [bool,msg]
+  var msg_reason = 'placeholder message';
+
+  return [false,msg_reason]
 }
+
+
+
+
+
+
+
 
 
 
@@ -90,15 +106,13 @@ function isLegalMove(move_string){
 ////////// HANDLING ANDY FORM //////////
 
 
-////////// REFERENCE + TESTING //////////
-
 
 var junk_counter = 0;
 
-function andySubmitPress(){
+async function andySubmitPress(){
   // take input and print it to output box, maybe do something with it
   var input_string = $('#andy-test-input').val();
-  var server_msg = dumpJunkToFB(input_string);
+  var server_msg = await dumpJunkToFB(input_string);
   console.log(server_msg);
   var current_output = $('#andy-test-output').val();
   if (current_output){
@@ -121,7 +135,7 @@ function scrollToBottom(){
   textarea.scrollTop = textarea.scrollHeight;
 }
 
-function dumpJunkToFB(s){
+async function dumpJunkToFB(s){
   const addJunk = firebase.functions().httpsCallable('addJunk');
   const readJunk = firebase.functions().httpsCallable('readJunk');
   var output_msg='';
@@ -129,21 +143,23 @@ function dumpJunkToFB(s){
   if (s.split(' ')[0] == 'read'){
     output_msg = readJunk({ counter: s.split(' ')[1]});
   } else if (s.split(' ')[0] == 'newgame'){
-    const g_name = s.split(' ')[1];
-    var output = NewGame(g_name);
-    output_msg = output[1];
+    try {
+      const g_name = s.split(' ')[1];
+      var output = await NewGame(g_name, false);
+      console.log(output);
+      output_msg = output[1];
+    }  catch(err) {
+      console.log(err.message);
+    }
   } else if (s.split(' ')[0] == 'move'){
     const move = s.split(' ')[1];
-    var output = MoveSubmit(move);
+    var output = await MoveSubmit(move, false);
     output_msg = output[1];
   } else if (s.split(' ')[0] == 'load'){
     const g_name = s.split(' ')[1];
-    var output = JoinGame(g_name);
+    var output = await JoinGame(g_name, false);
+    console.log(output[2][1]);
     output_msg = output[1];
-  } else if (s.split(' ')[0] == 'changegame'){
-    const g_name = s.split(' ')[1];
-    changeGame(g_name);
-    console.log('changed game to: ' + current_game);
   } else {
     addJunk({ text: s, counter: junk_counter}).then(result => {
         // Read result of the Cloud Function.

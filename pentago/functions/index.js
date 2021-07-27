@@ -4,18 +4,20 @@ admin.initializeApp();
 //const cors = require('cors')({origin: true});
 const game_root = '/test-games/';
 
+// kill -9 $(lsof -t -i:8081)
 
 // TODO - new move counter increment
 
 
 exports.startNewGame = functions.https.onCall((data, context) => {
   const game_name = data.name.toLowerCase();
-  const game_state_string = data.state;
   functions.logger.info('creating new game: ' + game_name);
+  const game_state_string = data.state;
+  functions.logger.info('set constants for new game: ' + game_name);
   var output_msg = '';
   // check if game already exists
   var ref = admin.database().ref(game_root);
-  ref.once("value").then(function(snapshot){
+  return ref.once("value").then(function(snapshot){
     if (snapshot.child(game_name).exists()){
       // game already exists and should not be created
       functions.logger.info('New game ' + game_name + ' not created, already exists.');
@@ -23,12 +25,16 @@ exports.startNewGame = functions.https.onCall((data, context) => {
     } else {
       // create new game
       return admin.database().ref(game_root + game_name).set({
-        0: game_state_string,
+        'moves':{},
+        'states':{
+          0: game_state_string
+        },
         'moves_played': 0
       }).then(() => {
         functions.logger.info('New game ' + game_name + ' successfully created.');
         return { msg: 'created new game ' + game_name, bool: true };
       }).catch((error) => {
+        functions.logger.info('Error creating game: ' + game_name);
         // Re-throwing the error as an HttpsError so that the client gets the error details.
         throw new functions.https.HttpsError('unknown', error.message, error);
       });
@@ -43,17 +49,21 @@ exports.makeMove = functions.https.onCall((data, context) => {
   functions.logger.info('making new move ' + new_move_string + ' in game ' + game_name);
   var output_msg = '';
   var ref = admin.database().ref(game_root);
-  ref.once("value").then(function(snapshot){
+  return ref.once("value").then(function(snapshot){
+    functions.logger.info('querying root child for ' + game_name);
     if (snapshot.child(game_name).exists()){
+      functions.logger.info('found game ' + game_name);
       var moves_played = snapshot.child(game_name).val()['moves_played'];
       var new_move_count = moves_played + 1;
       return admin.database().ref(game_root + game_name).update({
-        [new_move_count]: new_move_string,
+        'moves':{[new_move_count]: new_move_string},
+        'states':{[new_move_count]: '\["dummy_state","poop","'+new_move_string+'"\]'},
         'moves_played': new_move_count
       }).then(() => {
-        functions.logger.info('Move ' + new_move_string + ' successfully made.');
+        functions.logger.info('Move ' + new_move_string + ' successfully made as move ' + new_move_count.toString());
         return { msg: 'made move ' + new_move_string + ' in game ' + game_name, bool: true };
       }).catch((error) => {
+        functions.logger.info('error doing child game ' + game_name);
         // Re-throwing the error as an HttpsError so that the client gets the error details.
         throw new functions.https.HttpsError('unknown', error.message, error);
       });
@@ -66,13 +76,11 @@ exports.makeMove = functions.https.onCall((data, context) => {
 
 exports.loadExistingGame = functions.https.onCall((data, context) => {
   const game_name = data.name.toLowerCase();
-  const dbRef = admin.database().ref();
-  dbRef.child(game_root).child(game_name).get().then((snapshot) => {
-    if (snapshot.exists()) {
-      functions.logger.info(snapshot.val());
-      var game_state = [];
-      //var key = Object.keys(snapshot.val())[0];
-      //var output = snapshot.val()[key].text.toString();
+  var ref = admin.database().ref(game_root);
+  return ref.once("value").then(function(snapshot){
+    if (snapshot.child(game_name).exists()){
+      var moves_played = parseInt(snapshot.child(game_name).val()['moves_played']);
+      var game_state = snapshot.child(game_name).val()['states'][moves_played];
       return {
         exists: true,
         state: game_state
@@ -84,10 +92,22 @@ exports.loadExistingGame = functions.https.onCall((data, context) => {
       };
     }
   }).catch((error) => {
-    console.error(error);
-    return error;
+    functions.logger.info('error joining game ' + game_name);
+    // Re-throwing the error as an HttpsError so that the client gets the error details.
+    throw new functions.https.HttpsError('unknown', error.message, error);
   });
 });
+
+
+
+
+
+
+
+
+
+
+
 
 
 /*
