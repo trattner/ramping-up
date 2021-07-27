@@ -10,6 +10,34 @@ body {
   grid-gap: 50px;
 }
 
+.gameMode{
+  display: grid;
+  grid-template-columns: auto auto;
+  text-align: center;
+  grid-gap: 50px;
+}
+
+.joinButton{
+  grid-column-end: 2;
+  grid-row-start: 2;
+  width: 400px;
+  justify-self: end;
+}
+
+.newButton{
+  grid-column-start: 2;
+  grid-row-start: 2;
+  width: 400px;
+}
+
+.join{
+  grid-column-end: 2;
+  grid-row-start: 1;
+  font-size: 36px;
+  width: 400px;
+  justify-self: end;
+}
+
 /*.boardQuad{
   display: grid;
   grid-template-columns: auto auto auto;
@@ -36,6 +64,7 @@ body {
    z-index: 2;
    align-items: center;
    justify-items: center;
+   justify-self: center;
 }
 .boardQuad90{
    transform: rotate(90deg) translateY(0%);
@@ -50,6 +79,7 @@ body {
    z-index: 2;
    align-items: center;
    justify-items: center;
+   justify-self: center;
 }
 .boardQuad180{
    transform: rotate(180deg) translateY(0%);
@@ -64,6 +94,7 @@ body {
    z-index: 2;
    align-items: center;
    justify-items: center;
+   justify-self: center;
 }
 .boardQuad270{
    transform: rotate(270deg) translateY(0%);
@@ -78,6 +109,7 @@ body {
    z-index: 2;
    align-items: center;
    justify-items: center;
+   justify-self: center;
 }
 /*
 .boardQuad:after{
