@@ -68,6 +68,58 @@ function MoveSubmit(move_string,live = true){
     //update game state
 
     // TODO game operations on array
+    const move_color = move_string[0];
+    const move_quadrant = parseInt(move_string[1]);
+    const move_position = parseInt(move_string[2]);
+    var rotate_direction = '';
+    var rotate_quadrant = '';
+    if (move_string.length == 5) {
+      rotate_direction = move_string[3];
+      rotate_quadrant = parseInt(move_string[4]);
+    }
+    // place marble
+    current_game_state[0][move_quadrant - 1][move_position-1] = move_color;
+    // rotate quadrant
+    if (rotate_direction) {
+      const q = current_game_state[0][move_quadrant - 1];
+      /*
+          | 1 2 3 |  C   | 4 1 2 |
+          | 4 5 6 | ===> | 7 5 3 |
+          | 7 8 9 |      | 8 9 6 |
+
+          | 1 2 3 |  R   | 2 3 6 |
+          | 4 5 6 | ===> | 1 5 9 |
+          | 7 8 9 |      | 4 7 8 |
+      */
+      if (rotate_direction == 'C'){
+        // clockwise
+        current_game_state[0][move_quadrant - 1] = [q[3],q[0],q[1],q[6],q[4],q[2],q[7],q[8],q[5]];
+      } else {
+        // counter-clock
+        current_game_state[0][move_quadrant - 1] = [q[1],q[2],q[5],q[0],q[4],q[8],q[3],q[6],q[7]];
+      }
+    }
+
+    // add to turn counter
+    current_game_state[1] = current_game_state[1] + 1;
+
+    // update next move color
+    if (move_color == 'B'){
+      current_game_state[2] = 'W';
+    } else {
+      current_game_state[2] = 'B';
+    }
+
+    // check win condition and update game result
+    // check all possible fives, white wins / black wins bool combos
+
+
+    // check if full board (any zeroes), no fives then draw
+    // TODO game_state_array[3] => 'P' or 'D' or B/W
+
+    // update move string
+    current_game_state[4] = move_string;
+    // TODO - remove redundant from database
 
     // add game state to database
     return submitMoveToGame({
@@ -89,6 +141,16 @@ function MoveSubmit(move_string,live = true){
 function isLegalMove(move_string){
   // takes input message from front-end, outputs [bool,msg]
   var msg_reason = 'placeholder message';
+  // correct color?
+  if (move_string[0]!==current_game_state[2]){
+    msg_reason = 'Not the correct color to move!'
+    return [false,msg_reason];
+  }
+  // space occupied?
+
+  // rotation required?
+
+  // color capitalized?
 
   return [false,msg_reason]
 }

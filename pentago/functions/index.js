@@ -6,8 +6,6 @@ const game_root = '/test-games/';
 
 // kill -9 $(lsof -t -i:8081)
 
-// TODO - new move counter increment
-
 
 exports.startNewGame = functions.https.onCall((data, context) => {
   const game_name = data.name.toLowerCase();
