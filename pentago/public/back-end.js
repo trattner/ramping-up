@@ -54,7 +54,6 @@ async function NewGame(name_string, live = true){
       return [false,return_msg]
     }
   });
-
 }
 
 function MoveSubmit(move_string,live = true){
@@ -82,15 +81,7 @@ function MoveSubmit(move_string,live = true){
     // rotate quadrant
     if (rotate_direction) {
       const q = current_game_state[0][move_quadrant - 1];
-      /*
-          | 1 2 3 |  C   | 4 1 2 |
-          | 4 5 6 | ===> | 7 5 3 |
-          | 7 8 9 |      | 8 9 6 |
 
-          | 1 2 3 |  R   | 2 3 6 |
-          | 4 5 6 | ===> | 1 5 9 |
-          | 7 8 9 |      | 4 7 8 |
-      */
       if (rotate_direction == 'C'){
         // clockwise
         current_game_state[0][move_quadrant - 1] = [q[3],q[0],q[1],q[6],q[4],q[2],q[7],q[8],q[5]];
@@ -111,11 +102,20 @@ function MoveSubmit(move_string,live = true){
     }
 
     // check win condition and update game result
-    // check all possible fives, white wins / black wins bool combos
-
-
-    // check if full board (any zeroes), no fives then draw
-    // TODO game_state_array[3] => 'P' or 'D' or B/W
+    var winners = findWinners();
+    if (winners.length == 2){
+      // both players got five in a row
+      current_game_state[3] = 'D';
+    } else if (winners.length == 1){
+      // one player got five in a row
+      current_game_state[3] = winners[0];
+    } else if (current_game_state[1]==36){
+      // no five in a row, but all spots filled
+      current_game_state[3] = 'D';
+    } else {
+      // spots remaining and no winner detected
+      current_game_state[3] = 'P'
+    }
 
     // update move string
     current_game_state[4] = move_string;
@@ -143,16 +143,135 @@ function isLegalMove(move_string){
   var msg_reason = 'placeholder message';
   // correct color?
   if (move_string[0]!==current_game_state[2]){
-    msg_reason = 'Not the correct color to move!'
+    msg_reason = 'Not the correct color to move!';
     return [false,msg_reason];
   }
   // space occupied?
-
+  const move_quadrant = parseInt(move_string[1]);
+  const move_position = parseInt(move_string[2]);
+  if (current_game_state[0][move_quadrant - 1][move_position-1] !== 'O'){
+    msg_reason = 'Space occuppied, submit different move!';
+    return [false,msg_reason];
+  };
   // rotation required?
+  if (move_string.length < 5) {
+    if (rotateQuad(current_game_state[0][0])!==current_game_state[0][0] && rotateQuad(current_game_state[0][1])!==current_game_state[0][1] && rotateQuad(current_game_state[0][2])!==current_game_state[0][2] && rotateQuad(current_game_state[0][3])!==current_game_state[0][3]) {
+      msg_reason = 'Rotation required, please submit as part of move!';
+      return [false,msg_reason];
+    }
+  }
+  // can check other stuff for strictness but major flags passed above...
+  return [true,msg_reason];
+}
 
-  // color capitalized?
 
-  return [false,msg_reason]
+function rotateQuad(q,direction='C'){
+  // given a quadrant and direction, return rotated version
+  if (direction == 'C'){
+    // clockwise
+    return [q[3],q[0],q[1],q[6],q[4],q[2],q[7],q[8],q[5]];
+  }
+  if (direction == 'R'){
+    return [q[1],q[2],q[5],q[0],q[4],q[8],q[3],q[6],q[7]];
+  }
+  return ['direction not input'];
+  /*
+      | 1 2 3 |  C   | 4 1 2 |
+      | 4 5 6 | ===> | 7 5 3 |
+      | 7 8 9 |      | 8 9 6 |
+
+      | 1 2 3 |  R   | 2 3 6 |
+      | 4 5 6 | ===> | 1 5 9 |
+      | 7 8 9 |      | 4 7 8 |
+  */
+}
+
+function findWinners(){
+  // return list of winning colors if any, from current game
+  var winners = [];
+  const quads = current_game_state[0];
+  // flatten game quads into big array
+  const flat = [
+    quads[1].slice(0,3).concat(quads[0].slice(0,3)),
+    quads[1].slice(3,6).concat(quads[0].slice(3,6)),
+    quads[1].slice(6,9).concat(quads[0].slice(6,9)),
+    quads[2].slice(0,3).concat(quads[3].slice(0,3)),
+    quads[2].slice(3,6).concat(quads[3].slice(3,6)),
+    quads[2].slice(6,9).concat(quads[3].slice(6,9))
+  ];
+  // check verticals
+  for (var r = 0; r < 2; r++){
+    for (var c = 0; c < 6; c++){
+      var win_color = flat[r][c];
+      if (win_color == 'O'){ break; }
+      var check = 0;
+      for (var i = 1; i < 5; i++){
+        if (win_color == flat[r+i][c]){
+          check ++;
+        } else {
+          break;
+        }
+      }
+      if (check == 4){
+        winners.push(win_color);
+      }
+    }
+  }
+  // check horizontals
+  for (var r = 0; r < 6; r++){
+    for (var c = 0; c < 2; c++){
+      var win_color = flat[r][c];
+      if (win_color == 'O'){ break; }
+      var check = 0;
+      for (var i = 1; i < 5; i++){
+        if (win_color == flat[r][c+i]){
+          check ++;
+        } else {
+          break;
+        }
+      }
+      if (check == 4){
+        winners.push(win_color);
+      }
+    }
+  }
+  // check diagonal, top left to bottom right
+  for (var r = 0; r < 2; r++){
+    for (var c = 0; c < 2; c++){
+      var win_color = flat[r][c];
+      if (win_color == 'O'){ break; }
+      var check = 0;
+      for (var i = 1; i < 5; i++){
+        if (win_color == flat[r+i][c+i]){
+          check ++;
+        } else {
+          break;
+        }
+      }
+      if (check == 4){
+        winners.push(win_color);
+      }
+    }
+  }
+  // check diag top right to bottom left
+  for (var r = 0; r < 2; r++){
+    for (var c = 4; c < 6; c++){
+      var win_color = flat[r][c];
+      if (win_color == 'O'){ break; }
+      var check = 0;
+      for (var i = 1; i < 5; i++){
+        if (win_color == flat[r+i][c-i]){
+          check ++;
+        } else {
+          break;
+        }
+      }
+      if (check == 4){
+        winners.push(win_color);
+      }
+    }
+  }
+  return new Set(winners);
 }
 
 
