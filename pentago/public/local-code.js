@@ -1,13 +1,11 @@
-
+/*
 var moveCounter = 1;
-var finalMove;
-var playerColor = "W";
-
 
 function makeMove(clickedEle){
   if(clickedEle.charAt(0) == 'N'){
     if(moveCounter == 1 || moveCounter == 3){
       changeColor(clickedEle);
+      moveCounter = moveCounter + 1;
     }
     if(moveCounter == 2 || moveCounter == 4){
       console.log("Rotate a Quad");
@@ -27,24 +25,17 @@ function makeMove(clickedEle){
 function changeColor(eleId){
   var newColor;
   var newColorId;
-  if(playerColor == "W" && moveCounter == 1){
+  if(moveCounter == 1){
     newColorId = "W";
     newColor = '#FFFFFF';
-    finalMove = "W" + eleId.charAt(1) + eleId.charAt(2);
-    var newId = newColorId + eleId.charAt(1) + eleId.charAt(2);
-    document.getElementById(eleId).id = newId;
-    document.getElementById(newId).style.backgroundColor = newColor;
-    moveCounter = moveCounter + 1;
   }
-  if(playerColor == "B" && moveCounter == 3){
+  if(moveCounter == 3){
     newColorId = "B";
     newColor = '#000000';
-    finalMove = "B" + eleId.charAt(1) + eleId.charAt(2);
-    var newId = newColorId + eleId.charAt(1) + eleId.charAt(2);
-    document.getElementById(eleId).id = newId;
-    document.getElementById(newId).style.backgroundColor = newColor;
-    moveCounter = moveCounter + 1;
   }
+  var newId = newColorId + eleId.charAt(1) + eleId.charAt(2);
+  document.getElementById(eleId).id = newId;
+  document.getElementById(newId).style.backgroundColor = newColor;
   return;
 }
 
@@ -336,8 +327,6 @@ function q1RotateC(){
       quad1Spots[8].id = quad1Spots[8].id[0] + "19";
       document.getElementById("Quad1").className = "boardQuad0";
     }
-    finalMove += "C1";
-    MoveSubmit(finalMove);
     checkWin();
     moveCounter = moveCounter + 1;
   }
@@ -401,8 +390,6 @@ function q1RotateCC(){
       quad1Spots[8].id = quad1Spots[8].id[0] + "19";
       document.getElementById("Quad1").className = "boardQuad0";
     }
-    finalMove += "R1";
-    MoveSubmit(finalMove);
     checkWin();
     moveCounter = moveCounter + 1;
   }
@@ -466,8 +453,6 @@ function q2RotateC(){
       quad2Spots[8].id = quad2Spots[8].id[0] + "29";
       document.getElementById("Quad2").className = "boardQuad0";
     }
-    finalMove += "C2";
-    MoveSubmit(finalMove);
     checkWin();
     moveCounter = moveCounter + 1;
   }
@@ -531,8 +516,6 @@ function q2RotateCC(){
       quad2Spots[8].id = quad2Spots[8].id[0] + "29";
       document.getElementById("Quad2").className = "boardQuad0";
     }
-    finalMove += "R2";
-    MoveSubmit(finalMove);
     checkWin();
     moveCounter = moveCounter + 1;
   }
@@ -596,8 +579,6 @@ function q3RotateC(){
       quad3Spots[8].id = quad3Spots[8].id[0] + "39";
       document.getElementById("Quad3").className = "boardQuad0";
     }
-    finalMove += "C3";
-    MoveSubmit(finalMove);
     checkWin();
     moveCounter = moveCounter + 1;
   }
@@ -661,8 +642,6 @@ function q3RotateCC(){
       quad3Spots[8].id = quad3Spots[8].id[0] + "39";
       document.getElementById("Quad3").className = "boardQuad0";
     }
-    finalMove += "R3";
-    MoveSubmit(finalMove);
     checkWin();
     moveCounter = moveCounter + 1;
   }
@@ -726,8 +705,6 @@ function q4RotateC(){
       quad4Spots[8].id = quad4Spots[8].id[0] + "49";
       document.getElementById("Quad4").className = "boardQuad0";
     }
-    finalMove += "C4";
-    MoveSubmit(finalMove);
     checkWin();
     moveCounter = moveCounter + 1;
   }
@@ -791,8 +768,6 @@ function q4RotateCC(){
       quad4Spots[8].id = quad4Spots[8].id[0] + "49";
       document.getElementById("Quad4").className = "boardQuad0";
     }
-    finalMove += "R4";
-    MoveSubmit(finalMove);
     checkWin();
     moveCounter = moveCounter + 1;
   }
@@ -800,6 +775,8 @@ function q4RotateCC(){
     moveCounter = 1;
   }
 }
+*/
+
 
 
 /* CORE INTERFACE SPEC - communication protocol between front and back-end
