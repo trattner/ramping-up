@@ -2,9 +2,59 @@
 var moveCounter = 1;
 var finalMove;
 var playerColor = "W";
+var gameFlag = 0;
+const resultDict = {
+  "W": "White Won!",
+  "B": "Black Won!",
+  "D": "Draw? You both Suck!"
+}
 
+function createGame(){
+  var gameName = document.getElementById("gameNameInput").value;
+  var backendOutput = NewGame(gameName);
+  if (backendOutput[0]){
+    gameFlag = 1;
+  }else{
+    alert(backendOutput[1]);
+  }
+}
+
+function joinExisting(){
+  var gameName = document.getElementById("gameNameInput").value;
+  var currentBoard = JoinGame(gameName);
+  if(currentBoard[0]){
+    //Shows a winner and stops game load
+    if(currentBoard[2][3] != 'P'){
+      alert(resultDict[currentBoard[2][3]]);
+      return;
+    }
+    //Set whose move
+    if(currentBoard[2][1]%2 == 0){
+      moveCounter = 1;
+    }else{
+      moveCounter = 3;
+    }
+    // Set board positions
+    for(var i = 0; i<4 ; i++){
+      var quadSpot = document.getElementsByClassName("openSpot" + i);
+      for(var j = 0; j < 9; j++){
+        if(currentBoard[2][0][i][j] == 'W' || currentBoard[2][0][i][j] == 'B'){
+          quadSpot[j].id = currentBoard[2][0][i][j] + i + j;
+        }else{
+          quadSpot[j].id = 'N' + i + j;
+        }
+      }
+    }
+  }else{
+    alert(currentBoard[1])
+  }
+}
 
 function makeMove(clickedEle){
+  if(gameFlag == 0){
+    console.log("Join or Create Game");
+    return;
+  }
   if(clickedEle.charAt(0) == 'N'){
     if(moveCounter == 1 || moveCounter == 3){
       changeColor(clickedEle);
