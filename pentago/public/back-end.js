@@ -1,8 +1,9 @@
 var current_game = '';
 var current_game_state = [];
+const new_game_const = [[['O','O','O','O','O','O','O','O','O'],['O','O','O','O','O','O','O','O','O'],['O','O','O','O','O','O','O','O','O'],['O','O','O','O','O','O','O','O','O']],0,'W','P',''];
 
-async function JoinGame(name_string, live = true){
-  if (live) { return [false, 'dummy test output', []]; }
+async function JoinGame(name_string, live = false){
+  if (live) { return [false, 'dummy test output', new_game_const]; }
   // join an existing game by inputting name of game
   var success_bool = false;
   var return_msg = '';
@@ -28,7 +29,7 @@ async function JoinGame(name_string, live = true){
   });
 }
 
-async function NewGame(name_string, live = true){
+async function NewGame(name_string, live = false){
   if(live){ return [false, 'dummy test output'];}
 
   // make a new game
@@ -36,7 +37,7 @@ async function NewGame(name_string, live = true){
   const startNewGame = firebase.functions().httpsCallable('startNewGame');
 
   // create new game state array
-  var new_game_state_array = [[['O','O','O','O','O','O','O','O','O'],['O','O','O','O','O','O','O','O','O'],['O','O','O','O','O','O','O','O','O'],['O','O','O','O','O','O','O','O','O']],0,'W','P',''];
+  var new_game_state_array = new_game_const;
 
   // add game state to database
 
@@ -56,7 +57,7 @@ async function NewGame(name_string, live = true){
   });
 }
 
-function MoveSubmit(move_string,live = true){
+function MoveSubmit(move_string,live = false){
   if(live){ return [false, 'dummy test output on input ' + move_string]; }
   // user submits move
   var output_bool = false;
@@ -125,7 +126,7 @@ function MoveSubmit(move_string,live = true){
     return submitMoveToGame({
       name: current_game,
       move: move_string,
-      state: current_game_state
+      state: JSON.stringify(current_game_state)
     }).then(result => {
       var return_msg = result.data.msg;
       output_bool = result.data.bool;
@@ -323,7 +324,7 @@ async function dumpJunkToFB(s){
 
   if (s.split(' ')[0] == 'read'){
     output_msg = readJunk({ counter: s.split(' ')[1]});
-  } else if (s.split(' ')[0] == 'newgame'){
+  } else if (s.split(' ')[0] == 'n'){
     try {
       const g_name = s.split(' ')[1];
       var output = await NewGame(g_name, false);
@@ -342,13 +343,14 @@ async function dumpJunkToFB(s){
     console.log(output[2][1]);
     output_msg = output[1];
   } else {
-    addJunk({ text: s, counter: junk_counter}).then(result => {
+    output_msg = 'command not recognized';
+    /*addJunk({ text: s, counter: junk_counter}).then(result => {
         // Read result of the Cloud Function.
         var sanitizedMessage = result.data.text;
         console.log(result);
         output_msg = sanitizedMessage;
       });
-    junk_counter ++;
+    junk_counter ++;*/
   }
 
   return output_msg;

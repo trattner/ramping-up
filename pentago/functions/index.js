@@ -23,7 +23,6 @@ exports.startNewGame = functions.https.onCall((data, context) => {
     } else {
       // create new game
       return admin.database().ref(game_root + game_name).set({
-        'moves':{},
         'states':{
           0: game_state_string
         },
@@ -44,6 +43,7 @@ exports.startNewGame = functions.https.onCall((data, context) => {
 exports.makeMove = functions.https.onCall((data, context) => {
   const game_name = data.name.toLowerCase();
   const new_move_string = data.move;
+  const new_game_state = data.state;
   functions.logger.info('making new move ' + new_move_string + ' in game ' + game_name);
   var output_msg = '';
   var ref = admin.database().ref(game_root);
@@ -54,16 +54,21 @@ exports.makeMove = functions.https.onCall((data, context) => {
       var moves_played = snapshot.child(game_name).val()['moves_played'];
       var new_move_count = moves_played + 1;
       return admin.database().ref(game_root + game_name).update({
-        'moves':{[new_move_count]: new_move_string},
-        'states':{[new_move_count]: '\["dummy_state","poop","'+new_move_string+'"\]'},
         'moves_played': new_move_count
-      }).then(() => {
-        functions.logger.info('Move ' + new_move_string + ' successfully made as move ' + new_move_count.toString());
-        return { msg: 'made move ' + new_move_string + ' in game ' + game_name, bool: true };
-      }).catch((error) => {
-        functions.logger.info('error doing child game ' + game_name);
-        // Re-throwing the error as an HttpsError so that the client gets the error details.
-        throw new functions.https.HttpsError('unknown', error.message, error);
+      }).then(()=> {
+        functions.logger.info('incremented move count to ' +new_move_count+ ' in game ' + game_name);
+        return admin.database().ref(game_root + game_name + '/states').update({
+          [new_move_count]:new_game_state
+        }).then(() => {
+          functions.logger.info('Move ' + new_move_string + ' successfully made as move ' + new_move_count.toString());
+          return { msg: 'made move ' + new_move_string + ' in game ' + game_name, bool: true };
+        }).catch((error) => {
+          functions.logger.info('error doing child game ' + game_name);
+          // Re-throwing the error as an HttpsError so that the client gets the error details.
+          throw new functions.https.HttpsError('unknown', error.message, error);
+        });
+      }).catch((error)=>{
+        functions.logger.info('error doing moves_played increment in child game ' + game_name);
       });
     } else {
       functions.logger.info('Move ' + new_move_string + ' not because game not found: ' + game_name);

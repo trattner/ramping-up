@@ -9,9 +9,9 @@ const resultDict = {
   "D": "Draw? You both Suck!"
 }
 
-function createGame(){
+async function createGame(){
   var gameName = document.getElementById("gameNameInput").value;
-  var backendOutput = NewGame(gameName);
+  var backendOutput = await NewGame(gameName);
   if (backendOutput[0]){
     gameFlag = 1;
   }else{
@@ -19,9 +19,9 @@ function createGame(){
   }
 }
 
-function joinExisting(){
+async function joinExisting(){
   var gameName = document.getElementById("gameNameInput").value;
-  var currentBoard = JoinGame(gameName);
+  var currentBoard = await JoinGame(gameName);
   if(currentBoard[0]){
     //Shows a winner and stops game load
     if(currentBoard[2][3] != 'P'){
