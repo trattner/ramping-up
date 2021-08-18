@@ -2,6 +2,25 @@ var current_game = '';
 var current_game_state = [];
 const new_game_const = [[['O','O','O','O','O','O','O','O','O'],['O','O','O','O','O','O','O','O','O'],['O','O','O','O','O','O','O','O','O'],['O','O','O','O','O','O','O','O','O']],0,'W','P',''];
 
+function backendListen(oldgame,newgame){
+  setGameListener({
+    newname: newgame,
+    oldname: oldgame
+  }).then(result => {
+    var new_game_state = JSON.parse(result.data.state);
+    console.log('found new game state: ' + result.data.state);
+    current_game_state = new_game_state;
+    const event = new CustomEvent('newMove', {
+      gamename: current_game,
+      newstate: new_game_state
+    });
+    document.dispatchEvent(event);
+  }).catch((error) => {
+    console.log(error.toString());
+    return 'ERROR: ' + error.toString();
+  });
+}
+
 async function JoinGame(name_string, live = false){
   if (live) { return [false, 'dummy test output', new_game_const]; }
   // join an existing game by inputting name of game
@@ -17,6 +36,7 @@ async function JoinGame(name_string, live = false){
     var exists_bool = result.data.exists;
     var game_state = JSON.parse(result.data.state);
     if (exists_bool){
+      backendListen(current_game,name_string);
       current_game = name_string;
       current_game_state = game_state;
       return [true, 'game found', game_state];
@@ -48,6 +68,7 @@ async function NewGame(name_string, live = false){
     var return_msg = result.data.msg;
     var success = result.data.bool;
     if (success){
+      backendListen(current_game,name_string);
       current_game = name_string;
       current_game_state = new_game_state_array;
       return [success, return_msg];

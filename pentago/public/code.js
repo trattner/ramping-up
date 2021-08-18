@@ -851,6 +851,19 @@ function q4RotateCC(){
   }
 }
 
+$( window ).on( "load", function() {
+  document.addEventListener('newMove', function(e) {
+    const game_name = e.data.gamename;
+    const game_state = e.data.newstate;
+
+    // Lucas do something here with new move received
+
+  });
+});
+
+
+
+
 
 /* CORE INTERFACE SPEC - communication protocol between front and back-end
 

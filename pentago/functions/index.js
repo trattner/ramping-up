@@ -6,6 +6,19 @@ const game_root = '/test-games/';
 
 // kill -9 $(lsof -t -i:8081)
 
+exports.setGameListener = functions.https.onCall((data, context) => {
+  const game_name = data.newname.toLowerCase();
+  const old_game = data.oldname.toLowerCase();
+  if (old_game) {
+    // un-listen
+  }
+  var gameRef = firebase.database().ref(game_root + game_name + '/states');
+  return gameRef.on('value', (snapshot) => {
+    const data = snapshot.val();
+    var key = Math.max(Object.keys(data));
+    return { state: data[key] };
+  });
+});
 
 exports.startNewGame = functions.https.onCall((data, context) => {
   const game_name = data.name.toLowerCase();
