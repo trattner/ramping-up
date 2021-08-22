@@ -11,12 +11,13 @@ async function timedMoveCheck(){
   // check if more moves in db than present in browser
   const grabLatestState = firebase.functions().httpsCallable('grabLatestState');
   return await grabLatestState({
-    moves: current_game_state[1] + 1,
+    moves: current_game_state[1],
     name: current_game
   }).then(result => {
     var bool = result.data.newbool;
+    console.log('timed-check: ' + result.data.state);
     var new_game_state = JSON.parse(result.data.state);
-    if (bool){
+    if (bool || !bool){
       fireEvent(new_game_state);
     }
   });
@@ -117,8 +118,8 @@ function MoveSubmit(move_string,live = false){
 
     // TODO game operations on array
     const move_color = move_string[0];
-    const move_quadrant = parseInt(move_string[1]);
-    const move_position = parseInt(move_string[2]);
+    const move_quadrant = parseInt(move_string[1]) - 1;
+    const move_position = parseInt(move_string[2]) - 1;
     var rotate_direction = '';
     var rotate_quadrant = '';
     if (move_string.length == 5) {
@@ -126,17 +127,17 @@ function MoveSubmit(move_string,live = false){
       rotate_quadrant = parseInt(move_string[4]);
     }
     // place marble
-    current_game_state[0][move_quadrant - 1][move_position-1] = move_color;
+    current_game_state[0][move_quadrant][move_position] = move_color;
     // rotate quadrant
     if (rotate_direction) {
-      const q = current_game_state[0][move_quadrant - 1];
+      const q = current_game_state[0][rotate_quadrant];
 
       if (rotate_direction == 'C'){
         // clockwise
-        current_game_state[0][move_quadrant - 1] = [q[3],q[0],q[1],q[6],q[4],q[2],q[7],q[8],q[5]];
+        current_game_state[0][rotate_quadrant] = [q[3],q[0],q[1],q[6],q[4],q[2],q[7],q[8],q[5]];
       } else {
         // counter-clock
-        current_game_state[0][move_quadrant - 1] = [q[1],q[2],q[5],q[0],q[4],q[8],q[3],q[6],q[7]];
+        current_game_state[0][rotate_quadrant] = [q[1],q[2],q[5],q[0],q[4],q[8],q[3],q[6],q[7]];
       }
     }
 
