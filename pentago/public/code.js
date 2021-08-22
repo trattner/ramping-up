@@ -98,11 +98,6 @@ function changeColor(eleId){
   return;
 }
 
-function rotateQuad(){
-  console.log("Rotate");
-  return;
-}
-
 function checkWin(){
   checkAcross();
   checkDown();
@@ -856,8 +851,426 @@ $( window ).on( "load", function() {
     const game_name = e.data.gamename;
     const game_state = e.data.newstate;
 
-    // Lucas do something here with new move received
-
+    // Move received. Update board
+    const newId = game_state[4].charAt(0) + game_state[4].charAt(1) + game_state[4].charAt(2);
+    if(newId.charAt(0) == "W"){
+      const newColor = '#FFFFFF';
+    }else{
+      const newColor = '#000000';
+    }
+    document.getElementById("N" + game_state[4].charAt(1) + game_state[4].charAt(2)).id = newId;
+    document.getElementById(newId).style.backgroundColor = newColor;
+    moveCounter = moveCounter + 1;
+    const recQuad = game_state[4].charAt(4);
+    const recRotate = game_state[4].charAt(3);
+    if(recQuad == 1 && recRotate == 'C'){
+      var quadName = document.getElementById("Quad1");
+      if(document.getElementById("Quad1").className == "boardQuad0"){
+        var quad1Spots = document.getElementsByClassName("openSpot1");
+        quad1Spots[0].id = quad1Spots[0].id[0] + "13";
+        quad1Spots[1].id = quad1Spots[1].id[0] + "16";
+        quad1Spots[2].id = quad1Spots[2].id[0] + "19";
+        quad1Spots[3].id = quad1Spots[3].id[0] + "12";
+        quad1Spots[5].id = quad1Spots[5].id[0] + "18";
+        quad1Spots[6].id = quad1Spots[6].id[0] + "11";
+        quad1Spots[7].id = quad1Spots[7].id[0] + "14";
+        quad1Spots[8].id = quad1Spots[8].id[0] + "17";
+        document.getElementById("Quad1").className = "boardQuad90";
+       }
+      else if(document.getElementById("Quad1").className == "boardQuad90"){
+        var quad1Spots = document.getElementsByClassName("openSpot1");
+        quad1Spots[0].id = quad1Spots[0].id[0] + "19";
+        quad1Spots[1].id = quad1Spots[1].id[0] + "18";
+        quad1Spots[2].id = quad1Spots[2].id[0] + "17";
+        quad1Spots[3].id = quad1Spots[3].id[0] + "16";
+        quad1Spots[5].id = quad1Spots[5].id[0] + "14";
+        quad1Spots[6].id = quad1Spots[6].id[0] + "13";
+        quad1Spots[7].id = quad1Spots[7].id[0] + "12";
+        quad1Spots[8].id = quad1Spots[8].id[0] + "11";
+        document.getElementById("Quad1").className = "boardQuad180";
+      }
+      else if(document.getElementById("Quad1").className == "boardQuad180"){
+        var quad1Spots = document.getElementsByClassName("openSpot1");
+        quad1Spots[0].id = quad1Spots[0].id[0] + "17";
+        quad1Spots[1].id = quad1Spots[1].id[0] + "14";
+        quad1Spots[2].id = quad1Spots[2].id[0] + "11";
+        quad1Spots[3].id = quad1Spots[3].id[0] + "18";
+        quad1Spots[5].id = quad1Spots[5].id[0] + "12";
+        quad1Spots[6].id = quad1Spots[6].id[0] + "19";
+        quad1Spots[7].id = quad1Spots[7].id[0] + "16";
+        quad1Spots[8].id = quad1Spots[8].id[0] + "13";
+        document.getElementById("Quad1").className = "boardQuad270";
+      }
+      else if(document.getElementById("Quad1").className == "boardQuad270"){
+        var quad1Spots = document.getElementsByClassName("openSpot1");
+        quad1Spots[0].id = quad1Spots[0].id[0] + "11";
+        quad1Spots[1].id = quad1Spots[1].id[0] + "12";
+        quad1Spots[2].id = quad1Spots[2].id[0] + "13";
+        quad1Spots[3].id = quad1Spots[3].id[0] + "14";
+        quad1Spots[5].id = quad1Spots[5].id[0] + "16";
+        quad1Spots[6].id = quad1Spots[6].id[0] + "17";
+        quad1Spots[7].id = quad1Spots[7].id[0] + "18";
+        quad1Spots[8].id = quad1Spots[8].id[0] + "19";
+        document.getElementById("Quad1").className = "boardQuad0";
+      }
+    }
+    if(recQuad == 1 && recRotate == 'R'){
+      var quadName = document.getElementById("Quad1");
+      if(document.getElementById("Quad1").className == "boardQuad180"){
+        var quad1Spots = document.getElementsByClassName("openSpot1");
+        quad1Spots[0].id = quad1Spots[0].id[0] + "13";
+        quad1Spots[1].id = quad1Spots[1].id[0] + "16";
+        quad1Spots[2].id = quad1Spots[2].id[0] + "19";
+        quad1Spots[3].id = quad1Spots[3].id[0] + "12";
+        quad1Spots[5].id = quad1Spots[5].id[0] + "18";
+        quad1Spots[6].id = quad1Spots[6].id[0] + "11";
+        quad1Spots[7].id = quad1Spots[7].id[0] + "14";
+        quad1Spots[8].id = quad1Spots[8].id[0] + "17";
+        document.getElementById("Quad1").className = "boardQuad90";
+       }
+      else if(document.getElementById("Quad1").className == "boardQuad270"){
+        var quad1Spots = document.getElementsByClassName("openSpot1");
+        quad1Spots[0].id = quad1Spots[0].id[0] + "19";
+        quad1Spots[1].id = quad1Spots[1].id[0] + "18";
+        quad1Spots[2].id = quad1Spots[2].id[0] + "17";
+        quad1Spots[3].id = quad1Spots[3].id[0] + "16";
+        quad1Spots[5].id = quad1Spots[5].id[0] + "14";
+        quad1Spots[6].id = quad1Spots[6].id[0] + "13";
+        quad1Spots[7].id = quad1Spots[7].id[0] + "12";
+        quad1Spots[8].id = quad1Spots[8].id[0] + "11";
+        document.getElementById("Quad1").className = "boardQuad180";
+      }
+      else if(document.getElementById("Quad1").className == "boardQuad0"){
+        var quad1Spots = document.getElementsByClassName("openSpot1");
+        quad1Spots[0].id = quad1Spots[0].id[0] + "17";
+        quad1Spots[1].id = quad1Spots[1].id[0] + "14";
+        quad1Spots[2].id = quad1Spots[2].id[0] + "11";
+        quad1Spots[3].id = quad1Spots[3].id[0] + "18";
+        quad1Spots[5].id = quad1Spots[5].id[0] + "12";
+        quad1Spots[6].id = quad1Spots[6].id[0] + "19";
+        quad1Spots[7].id = quad1Spots[7].id[0] + "16";
+        quad1Spots[8].id = quad1Spots[8].id[0] + "13";
+        document.getElementById("Quad1").className = "boardQuad270";
+      }
+      else if(document.getElementById("Quad1").className == "boardQuad90"){
+        var quad1Spots = document.getElementsByClassName("openSpot1");
+        quad1Spots[0].id = quad1Spots[0].id[0] + "11";
+        quad1Spots[1].id = quad1Spots[1].id[0] + "12";
+        quad1Spots[2].id = quad1Spots[2].id[0] + "13";
+        quad1Spots[3].id = quad1Spots[3].id[0] + "14";
+        quad1Spots[5].id = quad1Spots[5].id[0] + "16";
+        quad1Spots[6].id = quad1Spots[6].id[0] + "17";
+        quad1Spots[7].id = quad1Spots[7].id[0] + "18";
+        quad1Spots[8].id = quad1Spots[8].id[0] + "19";
+        document.getElementById("Quad1").className = "boardQuad0";
+      }
+    }
+    if(recQuad == 2 && recRotate == 'C'){
+      var quadName = document.getElementById("Quad2");
+      if(document.getElementById("Quad2").className == "boardQuad0"){
+        var quad2Spots = document.getElementsByClassName("openSpot2");
+        quad2Spots[0].id = quad2Spots[0].id[0] + "23";
+        quad2Spots[1].id = quad2Spots[1].id[0] + "26";
+        quad2Spots[2].id = quad2Spots[2].id[0] + "29";
+        quad2Spots[3].id = quad2Spots[3].id[0] + "22";
+        quad2Spots[5].id = quad2Spots[5].id[0] + "28";
+        quad2Spots[6].id = quad2Spots[6].id[0] + "21";
+        quad2Spots[7].id = quad2Spots[7].id[0] + "24";
+        quad2Spots[8].id = quad2Spots[8].id[0] + "27";
+        document.getElementById("Quad2").className = "boardQuad90";
+       }
+      else if(document.getElementById("Quad2").className == "boardQuad90"){
+        var quad2Spots = document.getElementsByClassName("openSpot2");
+        quad2Spots[0].id = quad2Spots[0].id[0] + "29";
+        quad2Spots[1].id = quad2Spots[1].id[0] + "28";
+        quad2Spots[2].id = quad2Spots[2].id[0] + "27";
+        quad2Spots[3].id = quad2Spots[3].id[0] + "26";
+        quad2Spots[5].id = quad2Spots[5].id[0] + "24";
+        quad2Spots[6].id = quad2Spots[6].id[0] + "23";
+        quad2Spots[7].id = quad2Spots[7].id[0] + "22";
+        quad2Spots[8].id = quad2Spots[8].id[0] + "21";
+        document.getElementById("Quad2").className = "boardQuad180";
+      }
+      else if(document.getElementById("Quad2").className == "boardQuad180"){
+        var quad2Spots = document.getElementsByClassName("openSpot2");
+        quad2Spots[0].id = quad2Spots[0].id[0] + "27";
+        quad2Spots[1].id = quad2Spots[1].id[0] + "24";
+        quad2Spots[2].id = quad2Spots[2].id[0] + "21";
+        quad2Spots[3].id = quad2Spots[3].id[0] + "28";
+        quad2Spots[5].id = quad2Spots[5].id[0] + "22";
+        quad2Spots[6].id = quad2Spots[6].id[0] + "29";
+        quad2Spots[7].id = quad2Spots[7].id[0] + "26";
+        quad2Spots[8].id = quad2Spots[8].id[0] + "23";
+        document.getElementById("Quad2").className = "boardQuad270";
+      }
+      else if(document.getElementById("Quad2").className == "boardQuad270"){
+        var quad2Spots = document.getElementsByClassName("openSpot2");
+        quad2Spots[0].id = quad2Spots[0].id[0] + "21";
+        quad2Spots[1].id = quad2Spots[1].id[0] + "22";
+        quad2Spots[2].id = quad2Spots[2].id[0] + "23";
+        quad2Spots[3].id = quad2Spots[3].id[0] + "24";
+        quad2Spots[5].id = quad2Spots[5].id[0] + "26";
+        quad2Spots[6].id = quad2Spots[6].id[0] + "27";
+        quad2Spots[7].id = quad2Spots[7].id[0] + "28";
+        quad2Spots[8].id = quad2Spots[8].id[0] + "29";
+        document.getElementById("Quad2").className = "boardQuad0";
+      }
+    }
+    if(recQuad == 2 && recRotate == 'R'){
+      var quadName = document.getElementById("Quad2");
+      if(document.getElementById("Quad2").className == "boardQuad180"){
+        var quad2Spots = document.getElementsByClassName("openSpot2");
+        quad2Spots[0].id = quad2Spots[0].id[0] + "23";
+        quad2Spots[1].id = quad2Spots[1].id[0] + "26";
+        quad2Spots[2].id = quad2Spots[2].id[0] + "29";
+        quad2Spots[3].id = quad2Spots[3].id[0] + "22";
+        quad2Spots[5].id = quad2Spots[5].id[0] + "28";
+        quad2Spots[6].id = quad2Spots[6].id[0] + "21";
+        quad2Spots[7].id = quad2Spots[7].id[0] + "24";
+        quad2Spots[8].id = quad2Spots[8].id[0] + "27";
+        document.getElementById("Quad2").className = "boardQuad90";
+       }
+      else if(document.getElementById("Quad2").className == "boardQuad270"){
+        var quad2Spots = document.getElementsByClassName("openSpot2");
+        quad2Spots[0].id = quad2Spots[0].id[0] + "29";
+        quad2Spots[1].id = quad2Spots[1].id[0] + "28";
+        quad2Spots[2].id = quad2Spots[2].id[0] + "27";
+        quad2Spots[3].id = quad2Spots[3].id[0] + "26";
+        quad2Spots[5].id = quad2Spots[5].id[0] + "24";
+        quad2Spots[6].id = quad2Spots[6].id[0] + "23";
+        quad2Spots[7].id = quad2Spots[7].id[0] + "22";
+        quad2Spots[8].id = quad2Spots[8].id[0] + "21";
+        document.getElementById("Quad2").className = "boardQuad180";
+      }
+      else if(document.getElementById("Quad2").className == "boardQuad0"){
+        var quad2Spots = document.getElementsByClassName("openSpot2");
+        quad2Spots[0].id = quad2Spots[0].id[0] + "27";
+        quad2Spots[1].id = quad2Spots[1].id[0] + "24";
+        quad2Spots[2].id = quad2Spots[2].id[0] + "21";
+        quad2Spots[3].id = quad2Spots[3].id[0] + "28";
+        quad2Spots[5].id = quad2Spots[5].id[0] + "22";
+        quad2Spots[6].id = quad2Spots[6].id[0] + "29";
+        quad2Spots[7].id = quad2Spots[7].id[0] + "26";
+        quad2Spots[8].id = quad2Spots[8].id[0] + "23";
+        document.getElementById("Quad2").className = "boardQuad270";
+      }
+      else if(document.getElementById("Quad2").className == "boardQuad90"){
+        var quad2Spots = document.getElementsByClassName("openSpot2");
+        quad2Spots[0].id = quad2Spots[0].id[0] + "21";
+        quad2Spots[1].id = quad2Spots[1].id[0] + "22";
+        quad2Spots[2].id = quad2Spots[2].id[0] + "23";
+        quad2Spots[3].id = quad2Spots[3].id[0] + "24";
+        quad2Spots[5].id = quad2Spots[5].id[0] + "26";
+        quad2Spots[6].id = quad2Spots[6].id[0] + "27";
+        quad2Spots[7].id = quad2Spots[7].id[0] + "28";
+        quad2Spots[8].id = quad2Spots[8].id[0] + "29";
+        document.getElementById("Quad2").className = "boardQuad0";
+      }
+    }
+    if(recQuad == 3 && recRotate == 'C'){
+      var quadName = document.getElementById("Quad3");
+      if(document.getElementById("Quad3").className == "boardQuad0"){
+        var quad3Spots = document.getElementsByClassName("openSpot3");
+        quad3Spots[0].id = quad3Spots[0].id[0] + "33";
+        quad3Spots[1].id = quad3Spots[1].id[0] + "36";
+        quad3Spots[2].id = quad3Spots[2].id[0] + "39";
+        quad3Spots[3].id = quad3Spots[3].id[0] + "32";
+        quad3Spots[5].id = quad3Spots[5].id[0] + "38";
+        quad3Spots[6].id = quad3Spots[6].id[0] + "31";
+        quad3Spots[7].id = quad3Spots[7].id[0] + "34";
+        quad3Spots[8].id = quad3Spots[8].id[0] + "37";
+        document.getElementById("Quad3").className = "boardQuad90";
+       }
+      else if(document.getElementById("Quad3").className == "boardQuad90"){
+        var quad3Spots = document.getElementsByClassName("openSpot3");
+        quad3Spots[0].id = quad3Spots[0].id[0] + "39";
+        quad3Spots[1].id = quad3Spots[1].id[0] + "38";
+        quad3Spots[2].id = quad3Spots[2].id[0] + "37";
+        quad3Spots[3].id = quad3Spots[3].id[0] + "36";
+        quad3Spots[5].id = quad3Spots[5].id[0] + "34";
+        quad3Spots[6].id = quad3Spots[6].id[0] + "33";
+        quad3Spots[7].id = quad3Spots[7].id[0] + "32";
+        quad3Spots[8].id = quad3Spots[8].id[0] + "31";
+        document.getElementById("Quad3").className = "boardQuad180";
+      }
+      else if(document.getElementById("Quad3").className == "boardQuad180"){
+        var quad3Spots = document.getElementsByClassName("openSpot3");
+        quad3Spots[0].id = quad3Spots[0].id[0] + "37";
+        quad3Spots[1].id = quad3Spots[1].id[0] + "34";
+        quad3Spots[2].id = quad3Spots[2].id[0] + "31";
+        quad3Spots[3].id = quad3Spots[3].id[0] + "38";
+        quad3Spots[5].id = quad3Spots[5].id[0] + "32";
+        quad3Spots[6].id = quad3Spots[6].id[0] + "39";
+        quad3Spots[7].id = quad3Spots[7].id[0] + "36";
+        quad3Spots[8].id = quad3Spots[8].id[0] + "33";
+        document.getElementById("Quad3").className = "boardQuad270";
+      }
+      else if(document.getElementById("Quad3").className == "boardQuad270"){
+        var quad3Spots = document.getElementsByClassName("openSpot3");
+        quad3Spots[0].id = quad3Spots[0].id[0] + "31";
+        quad3Spots[1].id = quad3Spots[1].id[0] + "32";
+        quad3Spots[2].id = quad3Spots[2].id[0] + "33";
+        quad3Spots[3].id = quad3Spots[3].id[0] + "34";
+        quad3Spots[5].id = quad3Spots[5].id[0] + "36";
+        quad3Spots[6].id = quad3Spots[6].id[0] + "37";
+        quad3Spots[7].id = quad3Spots[7].id[0] + "38";
+        quad3Spots[8].id = quad3Spots[8].id[0] + "39";
+        document.getElementById("Quad3").className = "boardQuad0";
+      }
+    }
+    if(recQuad == 3 && recRotate == 'R'){
+      var quadName = document.getElementById("Quad3");
+      if(document.getElementById("Quad3").className == "boardQuad180"){
+        var quad3Spots = document.getElementsByClassName("openSpot3");
+        quad3Spots[0].id = quad3Spots[0].id[0] + "33";
+        quad3Spots[1].id = quad3Spots[1].id[0] + "36";
+        quad3Spots[2].id = quad3Spots[2].id[0] + "39";
+        quad3Spots[3].id = quad3Spots[3].id[0] + "32";
+        quad3Spots[5].id = quad3Spots[5].id[0] + "38";
+        quad3Spots[6].id = quad3Spots[6].id[0] + "31";
+        quad3Spots[7].id = quad3Spots[7].id[0] + "34";
+        quad3Spots[8].id = quad3Spots[8].id[0] + "37";
+        document.getElementById("Quad3").className = "boardQuad90";
+       }
+      else if(document.getElementById("Quad3").className == "boardQuad270"){
+        var quad3Spots = document.getElementsByClassName("openSpot3");
+        quad3Spots[0].id = quad3Spots[0].id[0] + "39";
+        quad3Spots[1].id = quad3Spots[1].id[0] + "38";
+        quad3Spots[2].id = quad3Spots[2].id[0] + "37";
+        quad3Spots[3].id = quad3Spots[3].id[0] + "36";
+        quad3Spots[5].id = quad3Spots[5].id[0] + "34";
+        quad3Spots[6].id = quad3Spots[6].id[0] + "33";
+        quad3Spots[7].id = quad3Spots[7].id[0] + "32";
+        quad3Spots[8].id = quad3Spots[8].id[0] + "31";
+        document.getElementById("Quad3").className = "boardQuad180";
+      }
+      else if(document.getElementById("Quad3").className == "boardQuad0"){
+        var quad3Spots = document.getElementsByClassName("openSpot3");
+        quad3Spots[0].id = quad3Spots[0].id[0] + "37";
+        quad3Spots[1].id = quad3Spots[1].id[0] + "34";
+        quad3Spots[2].id = quad3Spots[2].id[0] + "31";
+        quad3Spots[3].id = quad3Spots[3].id[0] + "38";
+        quad3Spots[5].id = quad3Spots[5].id[0] + "32";
+        quad3Spots[6].id = quad3Spots[6].id[0] + "39";
+        quad3Spots[7].id = quad3Spots[7].id[0] + "36";
+        quad3Spots[8].id = quad3Spots[8].id[0] + "33";
+        document.getElementById("Quad3").className = "boardQuad270";
+      }
+      else if(document.getElementById("Quad3").className == "boardQuad90"){
+        var quad3Spots = document.getElementsByClassName("openSpot3");
+        quad3Spots[0].id = quad3Spots[0].id[0] + "31";
+        quad3Spots[1].id = quad3Spots[1].id[0] + "32";
+        quad3Spots[2].id = quad3Spots[2].id[0] + "33";
+        quad3Spots[3].id = quad3Spots[3].id[0] + "34";
+        quad3Spots[5].id = quad3Spots[5].id[0] + "36";
+        quad3Spots[6].id = quad3Spots[6].id[0] + "37";
+        quad3Spots[7].id = quad3Spots[7].id[0] + "38";
+        quad3Spots[8].id = quad3Spots[8].id[0] + "39";
+        document.getElementById("Quad3").className = "boardQuad0";
+      }
+    }
+    if(recQuad == 4 && recRotate == 'C'){
+      var quadName = document.getElementById("Quad4");
+      if(document.getElementById("Quad4").className == "boardQuad0"){
+        var quad4Spots = document.getElementsByClassName("openSpot4");
+        quad4Spots[0].id = quad4Spots[0].id[0] + "43";
+        quad4Spots[1].id = quad4Spots[1].id[0] + "46";
+        quad4Spots[2].id = quad4Spots[2].id[0] + "49";
+        quad4Spots[3].id = quad4Spots[3].id[0] + "42";
+        quad4Spots[5].id = quad4Spots[5].id[0] + "48";
+        quad4Spots[6].id = quad4Spots[6].id[0] + "41";
+        quad4Spots[7].id = quad4Spots[7].id[0] + "44";
+        quad4Spots[8].id = quad4Spots[8].id[0] + "47";
+        document.getElementById("Quad4").className = "boardQuad90";
+       }
+      else if(document.getElementById("Quad4").className == "boardQuad90"){
+        var quad4Spots = document.getElementsByClassName("openSpot4");
+        quad4Spots[0].id = quad4Spots[0].id[0] + "49";
+        quad4Spots[1].id = quad4Spots[1].id[0] + "48";
+        quad4Spots[2].id = quad4Spots[2].id[0] + "47";
+        quad4Spots[3].id = quad4Spots[3].id[0] + "46";
+        quad4Spots[5].id = quad4Spots[5].id[0] + "44";
+        quad4Spots[6].id = quad4Spots[6].id[0] + "43";
+        quad4Spots[7].id = quad4Spots[7].id[0] + "42";
+        quad4Spots[8].id = quad4Spots[8].id[0] + "41";
+        document.getElementById("Quad4").className = "boardQuad180";
+      }
+      else if(document.getElementById("Quad4").className == "boardQuad180"){
+        var quad4Spots = document.getElementsByClassName("openSpot4");
+        quad4Spots[0].id = quad4Spots[0].id[0] + "47";
+        quad4Spots[1].id = quad4Spots[1].id[0] + "44";
+        quad4Spots[2].id = quad4Spots[2].id[0] + "41";
+        quad4Spots[3].id = quad4Spots[3].id[0] + "48";
+        quad4Spots[5].id = quad4Spots[5].id[0] + "42";
+        quad4Spots[6].id = quad4Spots[6].id[0] + "49";
+        quad4Spots[7].id = quad4Spots[7].id[0] + "46";
+        quad4Spots[8].id = quad4Spots[8].id[0] + "43";
+        document.getElementById("Quad4").className = "boardQuad270";
+      }
+      else if(document.getElementById("Quad4").className == "boardQuad270"){
+        var quad4Spots = document.getElementsByClassName("openSpot4");
+        quad4Spots[0].id = quad4Spots[0].id[0] + "41";
+        quad4Spots[1].id = quad4Spots[1].id[0] + "42";
+        quad4Spots[2].id = quad4Spots[2].id[0] + "43";
+        quad4Spots[3].id = quad4Spots[3].id[0] + "44";
+        quad4Spots[5].id = quad4Spots[5].id[0] + "46";
+        quad4Spots[6].id = quad4Spots[6].id[0] + "47";
+        quad4Spots[7].id = quad4Spots[7].id[0] + "48";
+        quad4Spots[8].id = quad4Spots[8].id[0] + "49";
+        document.getElementById("Quad4").className = "boardQuad0";
+      }
+    }
+    if(recQuad == 4 && recRotate == 'R'){
+      var quadName = document.getElementById("Quad4");
+      if(document.getElementById("Quad4").className == "boardQuad180"){
+        var quad4Spots = document.getElementsByClassName("openSpot4");
+        quad4Spots[0].id = quad4Spots[0].id[0] + "43";
+        quad4Spots[1].id = quad4Spots[1].id[0] + "46";
+        quad4Spots[2].id = quad4Spots[2].id[0] + "49";
+        quad4Spots[3].id = quad4Spots[3].id[0] + "42";
+        quad4Spots[5].id = quad4Spots[5].id[0] + "48";
+        quad4Spots[6].id = quad4Spots[6].id[0] + "41";
+        quad4Spots[7].id = quad4Spots[7].id[0] + "44";
+        quad4Spots[8].id = quad4Spots[8].id[0] + "47";
+        document.getElementById("Quad4").className = "boardQuad90";
+       }
+      else if(document.getElementById("Quad4").className == "boardQuad270"){
+        var quad4Spots = document.getElementsByClassName("openSpot4");
+        quad4Spots[0].id = quad4Spots[0].id[0] + "49";
+        quad4Spots[1].id = quad4Spots[1].id[0] + "48";
+        quad4Spots[2].id = quad4Spots[2].id[0] + "47";
+        quad4Spots[3].id = quad4Spots[3].id[0] + "46";
+        quad4Spots[5].id = quad4Spots[5].id[0] + "44";
+        quad4Spots[6].id = quad4Spots[6].id[0] + "43";
+        quad4Spots[7].id = quad4Spots[7].id[0] + "42";
+        quad4Spots[8].id = quad4Spots[8].id[0] + "41";
+        document.getElementById("Quad4").className = "boardQuad180";
+      }
+      else if(document.getElementById("Quad4").className == "boardQuad0"){
+        var quad4Spots = document.getElementsByClassName("openSpot4");
+        quad4Spots[0].id = quad4Spots[0].id[0] + "47";
+        quad4Spots[1].id = quad4Spots[1].id[0] + "44";
+        quad4Spots[2].id = quad4Spots[2].id[0] + "41";
+        quad4Spots[3].id = quad4Spots[3].id[0] + "48";
+        quad4Spots[5].id = quad4Spots[5].id[0] + "42";
+        quad4Spots[6].id = quad4Spots[6].id[0] + "49";
+        quad4Spots[7].id = quad4Spots[7].id[0] + "46";
+        quad4Spots[8].id = quad4Spots[8].id[0] + "43";
+        document.getElementById("Quad4").className = "boardQuad270";
+      }
+      else if(document.getElementById("Quad4").className == "boardQuad90"){
+        var quad4Spots = document.getElementsByClassName("openSpot4");
+        quad4Spots[0].id = quad4Spots[0].id[0] + "41";
+        quad4Spots[1].id = quad4Spots[1].id[0] + "42";
+        quad4Spots[2].id = quad4Spots[2].id[0] + "43";
+        quad4Spots[3].id = quad4Spots[3].id[0] + "44";
+        quad4Spots[5].id = quad4Spots[5].id[0] + "46";
+        quad4Spots[6].id = quad4Spots[6].id[0] + "47";
+        quad4Spots[7].id = quad4Spots[7].id[0] + "48";
+        quad4Spots[8].id = quad4Spots[8].id[0] + "49";
+        document.getElementById("Quad4").className = "boardQuad0";
+      }
+    }
   });
 });
 
