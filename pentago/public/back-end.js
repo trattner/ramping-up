@@ -1,7 +1,32 @@
 var current_game = '';
 var current_game_state = [];
 const new_game_const = [[['O','O','O','O','O','O','O','O','O'],['O','O','O','O','O','O','O','O','O'],['O','O','O','O','O','O','O','O','O'],['O','O','O','O','O','O','O','O','O']],0,'W','P',''];
+const ms_to_check = 5000;
 
+
+
+async function timedMoveCheck(){
+  // check if a game is selected
+  if (current_game==''){return;}
+  // check if more moves in db than present in browser
+  const grabLatestState = firebase.functions().httpsCallable('grabLatestState');
+  return await grabLatestState({
+    moves: current_game_state[1] + 1,
+    name: current_game
+  }).then(result => {
+    var bool = result.data.newbool;
+    var new_game_state = JSON.parse(result.data.state);
+    if (bool){
+      fireEvent(new_game_state);
+    }
+  });
+}
+
+$( window ).on( "load", function() {
+  var intervalID = setInterval(timedMoveCheck, ms_to_check);
+});
+
+/*
 async function backendListen(oldgame,newgame){
   const setGameListener = firebase.functions().httpsCallable('setGameListener');
   await setGameListener({
@@ -21,6 +46,7 @@ async function backendListen(oldgame,newgame){
     return 'ERROR: ' + error.toString();
   });
 }
+*/
 
 async function JoinGame(name_string, live = false){
   if (live) { return [false, 'dummy test output', new_game_const]; }
@@ -37,7 +63,7 @@ async function JoinGame(name_string, live = false){
     var exists_bool = result.data.exists;
     var game_state = JSON.parse(result.data.state);
     if (exists_bool){
-      await backendListen(current_game,name_string);
+      //await backendListen(current_game,name_string);
       current_game = name_string;
       current_game_state = game_state;
       return [true, 'game found', game_state];
@@ -69,7 +95,7 @@ async function NewGame(name_string, live = false){
     var return_msg = result.data.msg;
     var success = result.data.bool;
     if (success){
-      await backendListen(current_game,name_string);
+      //await backendListen(current_game,name_string);
       current_game = name_string;
       current_game_state = new_game_state_array;
       return [success, return_msg];
@@ -309,11 +335,11 @@ function findWinners(){
 
 ////////// HANDLING ANDY FORM //////////
 
-function fireEvent(){
-  var input_string = $('#andy-test-input').val();
+function fireEvent(state){
+  //var input_string = $('#andy-test-input').val();
   const event = new CustomEvent('newMove', {detail:{
-    gamename: 'testing',
-    newstate: input_string  
+    gamename: current_game,
+    newstate: state
   }});
   document.dispatchEvent(event);
 }

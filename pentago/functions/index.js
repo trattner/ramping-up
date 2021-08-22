@@ -27,6 +27,23 @@ exports.setGameListener = functions.https.onCall((data, context) => {
   });
 });
 
+exports.grabLatestState = functions.https.onCall((data,context)=>{
+    const moves = data.moves;
+    const game_name = data.name.toLowerCase();
+    var ref = admin.database().ref(game_root);
+    return ref.once("value").then(function(snapshot){
+      if (snapshot.child(game_name).exists()){
+        var moves_played = parseInt(snapshot.child(game_name).val()['moves_played']);
+        if (moves_played == moves){
+          var game_state = snapshot.child(game_name).val()['states'][moves_played];
+          return { newbool: true, state: game_state };
+        } else {
+          return { newbool: false, state: [] };
+        }
+      }
+    });
+  });
+
 exports.startNewGame = functions.https.onCall((data, context) => {
   const game_name = data.name.toLowerCase();
   functions.logger.info('creating new game: ' + game_name);
