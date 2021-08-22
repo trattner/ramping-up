@@ -9,14 +9,21 @@ const game_root = '/test-games/';
 exports.setGameListener = functions.https.onCall((data, context) => {
   const game_name = data.newname.toLowerCase();
   const old_game = data.oldname.toLowerCase();
+  functions.logger.info('Setting listener for new game: ' + game_name + '  and removing listener for old game: ' + old_game);
   if (old_game) {
+    functions.logger.info('Listener REMOVED for old game: ' + old_game);
     // un-listen
   }
-  var gameRef = firebase.database().ref(game_root + game_name + '/states');
+  var gameRef = admin.database().ref(game_root + game_name + '/states');
   return gameRef.on('value', (snapshot) => {
     const data = snapshot.val();
+    functions.logger.info(data[-1]);
+    /*
+    functions.logger.info(data);
     var key = Math.max(Object.keys(data));
-    return { state: data[key] };
+    functions.logger.info('Found state: ' + data[key] + ' with key = ' + key);
+    */
+    return { state: data[-1] };
   });
 });
 

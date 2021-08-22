@@ -2,8 +2,9 @@ var current_game = '';
 var current_game_state = [];
 const new_game_const = [[['O','O','O','O','O','O','O','O','O'],['O','O','O','O','O','O','O','O','O'],['O','O','O','O','O','O','O','O','O'],['O','O','O','O','O','O','O','O','O']],0,'W','P',''];
 
-function backendListen(oldgame,newgame){
-  setGameListener({
+async function backendListen(oldgame,newgame){
+  const setGameListener = firebase.functions().httpsCallable('setGameListener');
+  await setGameListener({
     newname: newgame,
     oldname: oldgame
   }).then(result => {
@@ -32,11 +33,11 @@ async function JoinGame(name_string, live = false){
   // find if game exists
   return await findGame({
     name: name_string,
-  }).then(result => {
+  }).then(async function(result) {
     var exists_bool = result.data.exists;
     var game_state = JSON.parse(result.data.state);
     if (exists_bool){
-      backendListen(current_game,name_string);
+      await backendListen(current_game,name_string);
       current_game = name_string;
       current_game_state = game_state;
       return [true, 'game found', game_state];
@@ -64,11 +65,11 @@ async function NewGame(name_string, live = false){
   return await startNewGame({
     name: name_string,
     state: JSON.stringify(new_game_state_array)
-  }).then(result => {
+  }).then(async function(result) {
     var return_msg = result.data.msg;
     var success = result.data.bool;
     if (success){
-      backendListen(current_game,name_string);
+      await backendListen(current_game,name_string);
       current_game = name_string;
       current_game_state = new_game_state_array;
       return [success, return_msg];
@@ -308,7 +309,14 @@ function findWinners(){
 
 ////////// HANDLING ANDY FORM //////////
 
-
+function fireEvent(){
+  var input_string = $('#andy-test-input').val();
+  const event = new CustomEvent('newMove', {detail:{
+    gamename: 'testing',
+    newstate: input_string  
+  }});
+  document.dispatchEvent(event);
+}
 
 var junk_counter = 0;
 
@@ -354,11 +362,11 @@ async function dumpJunkToFB(s){
     }  catch(err) {
       console.log(err.message);
     }
-  } else if (s.split(' ')[0] == 'move'){
+  } else if (s.split(' ')[0] == 'm'){
     const move = s.split(' ')[1];
     var output = await MoveSubmit(move, false);
     output_msg = output[1];
-  } else if (s.split(' ')[0] == 'load'){
+  } else if (s.split(' ')[0] == 'j'){
     const g_name = s.split(' ')[1];
     var output = await JoinGame(g_name, false);
     console.log(output[2][1]);
