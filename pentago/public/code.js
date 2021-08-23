@@ -35,13 +35,13 @@ async function joinExisting(){
       moveCounter = 3;
     }
     // Set board positions
-    for(var i = 0; i<4 ; i++){
+    for(var i = 1; i<5 ; i++){
       var quadSpot = document.getElementsByClassName("openSpot" + i);
-      for(var j = 0; j < 9; j++){
-        if(currentBoard[2][0][i][j] == 'W' || currentBoard[2][0][i][j] == 'B'){
-          quadSpot[j].id = currentBoard[2][0][i][j] + i + j;
+      for(var j = 1; j < 10; j++){
+        if(currentBoard[2][0][i-1][j-1] == 'W' || currentBoard[2][0][i-1][j-1] == 'B'){
+          quadSpot[j-1].id = currentBoard[2][0][i-1][j-1] + i + j;
         }else{
-          quadSpot[j].id = 'N' + i + j;
+          quadSpot[j-1].id = 'N' + i + j;
         }
       }
     }
