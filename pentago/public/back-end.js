@@ -15,9 +15,9 @@ async function timedMoveCheck(){
     name: current_game
   }).then(result => {
     var bool = result.data.newbool;
-    console.log('timed-check: ' + result.data.state);
+    console.log('time check: ' + current_game + ' \n' + result.data.state);
     var new_game_state = JSON.parse(result.data.state);
-    if (bool || !bool){
+    if (bool){
       fireEvent(new_game_state);
     }
   });
