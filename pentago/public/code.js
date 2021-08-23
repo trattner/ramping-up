@@ -848,8 +848,9 @@ function q4RotateCC(){
 
 $( window ).on( "load", function() {
   document.addEventListener('newMove', function(e) {
-    const game_name = e.data.gamename;
-    const game_state = e.data.newstate;
+    try {
+      const game_name = e.detail.gamename;
+      const game_state = e.detail.newstate;
 
     // Move received. Update board
     const newId = game_state[4].charAt(0) + game_state[4].charAt(1) + game_state[4].charAt(2);
@@ -1271,6 +1272,15 @@ $( window ).on( "load", function() {
         document.getElementById("Quad4").className = "boardQuad0";
       }
     }
+
+
+
+      // below is Andy testing code
+      $('#andy-test-events').append('newMove detected in game: ' + game_name + '\n' + game_state);
+    } catch(err) {
+      console.log(err.message);
+    }
+    return;
   });
 });
 

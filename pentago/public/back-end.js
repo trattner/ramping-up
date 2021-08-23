@@ -1,9 +1,36 @@
 var current_game = '';
 var current_game_state = [];
 const new_game_const = [[['O','O','O','O','O','O','O','O','O'],['O','O','O','O','O','O','O','O','O'],['O','O','O','O','O','O','O','O','O'],['O','O','O','O','O','O','O','O','O']],0,'W','P',''];
+const ms_to_check = 5000;
 
-function backendListen(oldgame,newgame){
-  setGameListener({
+
+
+async function timedMoveCheck(){
+  // check if a game is selected
+  if (current_game==''){return;}
+  // check if more moves in db than present in browser
+  const grabLatestState = firebase.functions().httpsCallable('grabLatestState');
+  return await grabLatestState({
+    moves: current_game_state[1],
+    name: current_game
+  }).then(result => {
+    var bool = result.data.newbool;
+    console.log('timed-check: ' + result.data.state);
+    var new_game_state = JSON.parse(result.data.state);
+    if (bool || !bool){
+      fireEvent(new_game_state);
+    }
+  });
+}
+
+$( window ).on( "load", function() {
+  var intervalID = setInterval(timedMoveCheck, ms_to_check);
+});
+
+/*
+async function backendListen(oldgame,newgame){
+  const setGameListener = firebase.functions().httpsCallable('setGameListener');
+  await setGameListener({
     newname: newgame,
     oldname: oldgame
   }).then(result => {
@@ -20,6 +47,7 @@ function backendListen(oldgame,newgame){
     return 'ERROR: ' + error.toString();
   });
 }
+*/
 
 async function JoinGame(name_string, live = false){
   if (live) { return [false, 'dummy test output', new_game_const]; }
@@ -32,11 +60,11 @@ async function JoinGame(name_string, live = false){
   // find if game exists
   return await findGame({
     name: name_string,
-  }).then(result => {
+  }).then(async function(result) {
     var exists_bool = result.data.exists;
     var game_state = JSON.parse(result.data.state);
     if (exists_bool){
-      backendListen(current_game,name_string);
+      //await backendListen(current_game,name_string);
       current_game = name_string;
       current_game_state = game_state;
       return [true, 'game found', game_state];
@@ -64,11 +92,11 @@ async function NewGame(name_string, live = false){
   return await startNewGame({
     name: name_string,
     state: JSON.stringify(new_game_state_array)
-  }).then(result => {
+  }).then(async function(result) {
     var return_msg = result.data.msg;
     var success = result.data.bool;
     if (success){
-      backendListen(current_game,name_string);
+      //await backendListen(current_game,name_string);
       current_game = name_string;
       current_game_state = new_game_state_array;
       return [success, return_msg];
@@ -90,8 +118,8 @@ function MoveSubmit(move_string,live = false){
 
     // TODO game operations on array
     const move_color = move_string[0];
-    const move_quadrant = parseInt(move_string[1]);
-    const move_position = parseInt(move_string[2]);
+    const move_quadrant = parseInt(move_string[1]) - 1;
+    const move_position = parseInt(move_string[2]) - 1;
     var rotate_direction = '';
     var rotate_quadrant = '';
     if (move_string.length == 5) {
@@ -99,17 +127,17 @@ function MoveSubmit(move_string,live = false){
       rotate_quadrant = parseInt(move_string[4]);
     }
     // place marble
-    current_game_state[0][move_quadrant - 1][move_position-1] = move_color;
+    current_game_state[0][move_quadrant][move_position] = move_color;
     // rotate quadrant
     if (rotate_direction) {
-      const q = current_game_state[0][move_quadrant - 1];
+      const q = current_game_state[0][rotate_quadrant];
 
       if (rotate_direction == 'C'){
         // clockwise
-        current_game_state[0][move_quadrant - 1] = [q[3],q[0],q[1],q[6],q[4],q[2],q[7],q[8],q[5]];
+        current_game_state[0][rotate_quadrant] = [q[3],q[0],q[1],q[6],q[4],q[2],q[7],q[8],q[5]];
       } else {
         // counter-clock
-        current_game_state[0][move_quadrant - 1] = [q[1],q[2],q[5],q[0],q[4],q[8],q[3],q[6],q[7]];
+        current_game_state[0][rotate_quadrant] = [q[1],q[2],q[5],q[0],q[4],q[8],q[3],q[6],q[7]];
       }
     }
 
@@ -308,7 +336,14 @@ function findWinners(){
 
 ////////// HANDLING ANDY FORM //////////
 
-
+function fireEvent(state){
+  //var input_string = $('#andy-test-input').val();
+  const event = new CustomEvent('newMove', {detail:{
+    gamename: current_game,
+    newstate: state
+  }});
+  document.dispatchEvent(event);
+}
 
 var junk_counter = 0;
 
@@ -354,11 +389,11 @@ async function dumpJunkToFB(s){
     }  catch(err) {
       console.log(err.message);
     }
-  } else if (s.split(' ')[0] == 'move'){
+  } else if (s.split(' ')[0] == 'm'){
     const move = s.split(' ')[1];
     var output = await MoveSubmit(move, false);
     output_msg = output[1];
-  } else if (s.split(' ')[0] == 'load'){
+  } else if (s.split(' ')[0] == 'j'){
     const g_name = s.split(' ')[1];
     var output = await JoinGame(g_name, false);
     console.log(output[2][1]);
