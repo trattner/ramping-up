@@ -3,8 +3,6 @@ var current_game_state = [];
 const new_game_const = [[['O','O','O','O','O','O','O','O','O'],['O','O','O','O','O','O','O','O','O'],['O','O','O','O','O','O','O','O','O'],['O','O','O','O','O','O','O','O','O']],0,'W','P',''];
 const ms_to_check = 5000;
 
-
-
 async function timedMoveCheck(){
   // check if a game is selected
   if (current_game==''){return;}
@@ -15,10 +13,12 @@ async function timedMoveCheck(){
     name: current_game
   }).then(result => {
     var bool = result.data.newbool;
-    console.log('time check: ' + current_game + ' \n' + result.data.state);
-    var new_game_state = JSON.parse(result.data.state);
     if (bool){
+      console.log('firing time check event: ' + current_game + ' \n' + result.data.state);
+      const new_game_state = JSON.parse(result.data.state);
       fireEvent(new_game_state);
+    } else {
+      console.log('checked game' + current_game + ' and found no move difference.');
     }
   });
 }

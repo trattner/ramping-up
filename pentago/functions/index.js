@@ -6,6 +6,7 @@ const game_root = '/test-games/';
 
 // kill -9 $(lsof -t -i:8081)
 
+/*
 exports.setGameListener = functions.https.onCall((data, context) => {
   const game_name = data.newname.toLowerCase();
   const old_game = data.oldname.toLowerCase();
@@ -18,14 +19,11 @@ exports.setGameListener = functions.https.onCall((data, context) => {
   return gameRef.on('value', (snapshot) => {
     const data = snapshot.val();
     functions.logger.info(data[-1]);
-    /*
-    functions.logger.info(data);
-    var key = Math.max(Object.keys(data));
-    functions.logger.info('Found state: ' + data[key] + ' with key = ' + key);
-    */
+
     return { state: data[-1] };
   });
 });
+*/
 
 exports.grabLatestState = functions.https.onCall((data,context)=>{
     const moves = data.moves;
@@ -34,7 +32,7 @@ exports.grabLatestState = functions.https.onCall((data,context)=>{
     return ref.once("value").then(function(snapshot){
       if (snapshot.child(game_name).exists()){
         var moves_played = parseInt(snapshot.child(game_name).val()['moves_played']);
-        if (moves_played == moves){
+        if (moves_played != moves){
           var game_state = snapshot.child(game_name).val()['states'][moves_played];
           return { newbool: true, state: game_state };
         } else {

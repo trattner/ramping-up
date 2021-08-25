@@ -8,6 +8,10 @@ const resultDict = {
   "B": "Black Won!",
   "D": "Draw? You both Suck!"
 }
+const colorDict = {
+  'W': '#FFFFFF',
+  'B': '#000000'
+}
 
 async function createGame(){
   var gameName = document.getElementById("gameNameInput").value;
@@ -24,6 +28,7 @@ async function joinExisting(){
   var currentBoard = await JoinGame(gameName);
   if(currentBoard[0]){
     //Shows a winner and stops game load
+    console.log('checking for winner...');
     if(currentBoard[2][3] != 'P'){
       alert(resultDict[currentBoard[2][3]]);
       return;
@@ -31,20 +36,38 @@ async function joinExisting(){
     //Set whose move
     if(currentBoard[2][1]%2 == 0){
       moveCounter = 1;
+      console.log('setting moveCounter = ' + '1');
+      playerColor = "W";
     }else{
+      console.log('setting moveCounter = ' + '3');
       moveCounter = 3;
+      playerColor = "B";
     }
     // Set board positions
     for(var i = 1; i<5 ; i++){
       var quadSpot = document.getElementsByClassName("openSpot" + i);
       for(var j = 1; j < 10; j++){
         if(currentBoard[2][0][i-1][j-1] == 'W' || currentBoard[2][0][i-1][j-1] == 'B'){
-          quadSpot[j-1].id = currentBoard[2][0][i-1][j-1] + i + j;
+          // set the color of elem from N to W/B
+          const color = currentBoard[2][0][i-1][j-1];
+          const elemId = currentBoard[2][0][i-1][j-1] + i + j;
+          quadSpot[j-1].id = elemId;
+          console.log('setting openspot' + i + ' quadspot' + (j-1).toString() + ' to ' + (currentBoard[2][0][i-1][j-1] + i + j).toString());
+
+          // set the background color of the elem
+          console.log('setting element ' + elemId  + ' background color');
+          document.getElementById(elemId).style.backgroundColor = colorDict[color];
+
         }else{
           quadSpot[j-1].id = 'N' + i + j;
+          console.log('setting openspot' + i + ' quadspot' + (j-1).toString() + ' to ' + 'N' + i + j);
+          // TODO - set background to grey
         }
       }
     }
+    // allow next move
+    gameFlag = 1;
+
   }else{
     alert(currentBoard[1])
   }
@@ -848,18 +871,31 @@ function q4RotateCC(){
 
 $( window ).on( "load", function() {
   document.addEventListener('newMove', function(e) {
-    try {
+    //try {
       const game_name = e.detail.gamename;
       const game_state = e.detail.newstate;
 
     // Move received. Update board
     const newId = game_state[4].charAt(0) + game_state[4].charAt(1) + game_state[4].charAt(2);
+    var newColor = '';
     if(newId.charAt(0) == "W"){
-      const newColor = '#FFFFFF';
+      newColor = '#FFFFFF';
     }else{
-      const newColor = '#000000';
+      newColor = '#000000';
     }
-    document.getElementById("N" + game_state[4].charAt(1) + game_state[4].charAt(2)).id = newId;
+    console.log('logging gamestate[4] = ' + game_state[4]);
+
+
+    // change the N elem id
+    var try_elem = document.getElementById("N" + game_state[4].charAt(1) + game_state[4].charAt(2));
+    if(try_elem){
+      console.log('elem found!');
+      try_elem.id = newId;
+    } else {
+      console.log('no elem found when searching: ' + "N" + game_state[4].charAt(1) + game_state[4].charAt(2));
+    }
+
+
     document.getElementById(newId).style.backgroundColor = newColor;
     moveCounter = moveCounter + 1;
     const recQuad = game_state[4].charAt(4);
@@ -1273,13 +1309,11 @@ $( window ).on( "load", function() {
       }
     }
 
-
-
       // below is Andy testing code
       $('#andy-test-events').append('newMove detected in game: ' + game_name + '\n' + game_state);
-    } catch(err) {
-      console.log(err.message);
-    }
+    // } catch(err) {
+    //   console.log(err.message);
+    // }
     return;
   });
 });
